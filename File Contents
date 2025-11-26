@@ -1,0 +1,95 @@
+Heading - "Section 1"
+Text box - solid black border and upper left text field typing
+Button to add question - if want to add have + or - to delete
+
+
+var d = this.getField("Dropdown1")
+console.println(d.getItemAt(1));
+
+The rect array consists of four numbers [ x ll, y ll, x ur, y ur ] 
+
+var d = this.getField("Dropdown1")
+
+switch (d.value){
+
+case "How are you today?":
+    console.println("How are you today");
+    break;
+case "What is your favorite color?":
+    console.println("What is your favorite color?");
+    break;
+default:
+console.println("Nothing selected");
+}
+What is your favorite color?
+
+true
+
+var d = this.getField("Dropdown1");
+var dropdownRectArr1 = [39.79621887207031,651.142333984375,591.4237670898438,566.829833984375];
+var dropdownRectArr2 = [101.46072387695312,555.3682250976562,227.38174438476562,535.3682250976562];
+var buttonArr1 = [42.80717468261719,563.302734375,57.20738220214844,543.302734375];
+var textFieldSec1 = this.getField("Section1 TextField1");
+var buttonFieldSec1 = this.getField("Section1 Button1");
+
+// Create text box if Selected Question is not selected and a textfield doesn't exist
+if (d.value != "-Select Question-" && !textFieldSec1){
+    var j = this.addField("Section1 TextField1", "text", this.pageNum, dropdownRectArr1);
+	j.textSize = 9;
+	j.alignment = "left";
+	j.borderStyle = border.s;
+	j.strokeColor = color.black;
+	j.lineWidth = 1;
+	j.multiline = true;
+    var b = this.addField("Section1 Button1", "button", this.pageNum, buttonArr1);
+	b.borderStyle = border.s;
+	b.strokeColor = color.black;
+	b.lineWidth = 1;
+	b.buttonSetCaption("+");
+	b.setAction("MouseDown","var b = this.getField('Section1 Button1');
+
+if (b && this.getField('Dropdown2')) {
+this.removeField('Dropdown2');
+	b.buttonSetCaption('+');
+
+
+} else{
+    var k = this.addField('Dropdown2', 'combobox', this.pageNum, dropdownRectArr2);
+	k.setItems(['-Select Question-', 'Question 1', 'Question 2']);
+	b.buttonSetCaption('-');
+}");
+
+
+// If another item selected, don't change anything
+} else if (d.value == "-Select Question-" && textFieldSec1) {
+	this.removeField("Section1 TextField1");
+	this.removeField("Section1 Button1");
+
+}
+
+// ============================ button logic
+var b = this.getField("Section1 Button1");
+
+if (b && this.getField("Dropdown2")) {
+this.removeField("Dropdown2");
+	b.buttonSetCaption("+");
+
+
+} else{
+    var k = this.addField("Dropdown2", "combobox", this.pageNum, dropdownRectArr2);
+	k.setItems(["-Select Question-", "Question 1", "Question 2"]);
+	b.buttonSetCaption("-");
+}
+
+
+/*var b = this.getField("Section1 Button1");
+
+if (b) {
+    var k = this.addField("Dropdown2", "combobox", this.pageNum, dropdownRectArr2);
+	k.setItems(["-Select Question-", "Question 1", "Question 2"]);
+	b.buttonSetCaption("-");
+} else if (b && this.getField("Dropdown2")){
+	this.removeField("Dropdown2");
+}
+*/
+
