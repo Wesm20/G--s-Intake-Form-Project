@@ -1,0 +1,74 @@
+// Dropdown 1 // 
+var coord_sect1_TextField1 = [38.36689758300781,651.142333984375,589.9944458007812,566.829833984375];
+var coord_sect1_TextField2 = [38.36689758300781,532.6468505859375,589.9945068359375,448.3343811035156];
+var coord_sect1_TextField3 = [38.36689758300781,417.1011047363281,589.9944458007812,332.7886657714844];
+var coord_sect1_TextField4 = [38.36689758300781,296.96258544921875,589.9944458007812,212.6501007080078];
+var coord_sect1_TextField5 = [38.36689758300781,178.912109375,589.9945068359375,94.59962463378906];
+
+var coordsSect1_TextFields = [[38.36689758300781,651.142333984375,589.9944458007812,566.829833984375], [38.36689758300781,532.6468505859375,589.9945068359375,448.3343811035156], [38.36689758300781,417.1011047363281,589.9944458007812,332.7886657714844], [38.36689758300781,296.96258544921875,589.9944458007812,212.6501007080078], [38.36689758300781,178.912109375,589.9945068359375,94.59962463378906]];
+
+var coordsSect1_Button = [[43.78898620605469,563.302734375,58.18919372558594,543.302734375], [43.78898620605469,327.66650390625,58.18919372558594,307.66650390625], [43.78898620605469,444.8072814941406,58.18919372558594,424.8072814941406], 
+[43.78898620605469,209.12301635742188,58.18919372558594,189.12301635742188], [43.78898620605469,90.41798400878906,58.18919372558594,71.07252502441406]];
+
+var coords_sect1_Dropdown = [[100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125], [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812], [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219], [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906], [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406]];
+
+var sect1_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""]];
+
+var coord_sect1_Dropdown1 = [100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125];
+var coord_sect1_Dropdown2 = [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812];
+var coord_sect1_Dropdown3 = [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219];
+var coord_sect1_Dropdown4 = [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906];
+var coord_sect1_Dropdown5 = [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406];
+
+var coord_sect1_Button1 = [43.78898620605469,563.302734375,58.18919372558594,543.302734375];
+var coord_sect1_Button2 = [43.78898620605469,327.66650390625,58.18919372558594,307.66650390625];
+var coord_sect1_Button3 = [43.78898620605469,444.8072814941406,58.18919372558594,424.8072814941406];
+var coord_sect1_Button4 = [43.78898620605469,209.12301635742188,58.18919372558594,189.12301635742188];
+var coord_sect1_Button5 = [43.78898620605469,90.41798400878906,58.18919372558594,71.07252502441406];
+
+
+var d = this.getField(event.target.name);
+var totalDropdowns = 0;
+//console.println("Field name: " + event.target.name);
+var eventName = event.target.name;
+//console.println("Field name number: " + eventName.slice(0,-1));
+
+var currPageNum = 0;
+var textFieldSec1 = this.getField("Section1 TextField1");
+var buttonFieldSec1 = this.getField("Section1 Button1");
+var n = this.numFields;
+var tD = 0;
+
+for ( var i = 0; i < n; i++) {
+	var fname = this.getNthFieldName(i);
+	//console.println(fname);
+	//console.println(this.getField(fname).type);
+	var fieldType = this.getField(fname).type;
+	if (fieldType == "combobox"){
+	//console.println("Field " + fname + " is a combobox.");
+	tD++;
+	}
+}
+
+//console.println("Stupid var: " + ("coord_sect1_TextField" + tD));
+// Create text box if Selected Question is not selected and a textfield doesn't exist
+if (d.value != "-Select Question-" && !textFieldSec1){
+    var j = this.addField(("Section1 TextField" + tD), "text", currPageNum, (coordsSect1_TextFields[(tD - 1)]));
+	j.textSize = 9;
+	j.alignment = "left";
+	j.borderStyle = border.s;
+	j.strokeColor = color.black;
+	j.lineWidth = 1;
+	j.multiline = true;
+    var b = this.addField("Section1 Button" + tD, "button", this.pageNum, coordsSect1_Button[(tD - 1)]);
+	b.borderStyle = border.s;
+	b.strokeColor = color.black;
+	b.lineWidth = 1;
+	b.buttonSetCaption("+");
+	b.setAction("MouseDown","var b = this.getField(\"" + ('Section1 Button' + tD)+ "\");\nif (b && this.getField(\"" + (eventName.slice(0,-1) + '2') + "\")) {\nthis.removeField(\"" + (eventName.slice(0,-1) + (tD + 1)) + "\"); \nb.buttonSetCaption('+');\n} else{\nvar k = this.addField(\"" + (eventName.slice(0,-1) + (tD + 1)) + "\", 'combobox', " + currPageNum + ", [" + coords_sect1_Dropdown[tD] + "]);\nk.setItems([" + sect1_Qs_Formatted[tD] + "]);\nb.buttonSetCaption('-');\n}");
+
+// If another item selected, don't change anything
+} else if (d.value == "-Select Question-" && textFieldSec1) {
+	this.removeField("Section1 TextField" + tD);
+	this.removeField("Section1 Button" + tD);
+}
