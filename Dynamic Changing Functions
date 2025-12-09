@@ -1,0 +1,36 @@
+function getComboboxTotals(){
+	var tD = 0;
+	for ( var i = 0; i < n; i++) {
+		var fname = this.getNthFieldName(i);
+		var fieldType = this.getField(fname).type;
+		if (fieldType == "combobox"){tD++;}}
+	return tD;
+}
+
+function createButton(){
+	var crtStr = "var b = this.getField(\"" + ('Section1 Button' + tD)+ "\");\nif (b && this.getField(\"" + (eventName.slice(0,-1) + '2') + "\")) {\nthis.removeField(\"" + (eventName.slice(0,-1) + (tD + 1)) + "\"); \nb.buttonSetCaption('+');\n} else{\nvar k = this.addField(\"" + (eventName.slice(0,-1) + (tD + 1)) + "\", 'combobox', " + currPageNum + ", [" + coords_sect1_Dropdown[tD] + "]);\nk.setItems([" + sect1_Qs_Formatted[tD] + "]);\nb.buttonSetCaption('-');\n}";
+	// var crtStr = "Here is a string: var b = console.println('Hello World');"
+	return crtStr;
+}
+
+console.println("Button action: " + createButton());
+
+function createTextbox (){
+	var currPageNum = 0;
+	var tD = getComboboxTotals();
+	if (d.value != "-Select Question-" && !textFieldSec1){
+    var j = this.addField(("Section1 TextField" + tD), "text", currPageNum, (coordsSect1_TextFields[(tD - 1)]));
+	j.textSize = 9;
+	j.alignment = "left";
+	j.borderStyle = border.s;
+	j.strokeColor = color.black;
+	j.lineWidth = 1;
+	j.multiline = true;
+    var b = this.addField("Section1 Button" + tD, "button", this.pageNum, coordsSect1_Button[(tD - 1)]);
+	b.borderStyle = border.s;
+	b.strokeColor = color.black;
+	b.lineWidth = 1;
+	b.buttonSetCaption("+");
+	b.setAction("MouseDown","var b = this.getField(\"" + ('Section1 Button' + tD)+ "\");\nif (b && this.getField(\"" + (eventName.slice(0,-1) + '2') + "\")) {\nthis.removeField(\"" + (eventName.slice(0,-1) + (tD + 1)) + "\"); \nb.buttonSetCaption('+');\n} else{\nvar k = this.addField(\"" + (eventName.slice(0,-1) + (tD + 1)) + "\", 'combobox', " + currPageNum + ", [" + coords_sect1_Dropdown[tD] + "]);\nk.setItems([" + sect1_Qs_Formatted[tD] + "]);\nb.buttonSetCaption('-');\n}");
+}
+createTextbox();
