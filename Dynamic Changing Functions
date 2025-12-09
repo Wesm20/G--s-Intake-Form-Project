@@ -29,6 +29,7 @@ function createTextboxQuotes(){
 		"b.borderStyle = border.s;\n" +
 		"b.strokeColor = color.black;\n" +
 		"b.lineWidth = 1;\n" +
+		"b.display = display.noPrint;\n" + 
 		"b.buttonSetCaption('+');\n" +
 		"b.setAction(\"MouseDown\",createButtonQuotes());\n" +
 "} else if (d.value == '-Select Question-' && textFieldSec1) {\n" +
@@ -77,6 +78,7 @@ function createTextbox (){
 		b.borderStyle = border.s;
 		b.strokeColor = color.black;
 		b.lineWidth = 1;
+		b.display = display.noPrint;
 		b.buttonSetCaption("+");
 		b.setAction("MouseDown",createButtonQuotes());
 } else if (d.value == "-Select Question-" && textFieldSec1) {
@@ -86,3 +88,25 @@ function createTextbox (){
 }
 
 createTextbox();
+
+/*if (getComboboxTotals() == 2){
+	var d = this.getField("Dropdown2");
+	d.setAction("Calculate", createTextboxQuotes());
+}
+
+if (getComboboxTotals() == 3){
+	var d = this.getField("Dropdown3");
+	d.setAction("Calculate", createTextboxQuotes());
+}
+
+if (getComboboxTotals() == 4){
+	var d = this.getField("Dropdown4");
+	d.setAction("Calculate", createTextboxQuotes());
+}
+if (getComboboxTotals() == 5){
+	var d = this.getField("Dropdown5");
+	d.setAction("Calculate", createTextboxQuotes());
+}*/
+
+
+
