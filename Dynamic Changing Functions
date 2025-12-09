@@ -3,21 +3,27 @@ var coordsSect1_TextFields = [[38.36689758300781,651.142333984375,589.9944458007
 var coordsSect1_Button = [[43.78898620605469,563.302734375,58.18919372558594,543.302734375], [43.78898620605469,444.8072814941406,58.18919372558594,424.8072814941406], [43.78898620605469,327.66650390625,58.18919372558594,307.66650390625],  
 [43.78898620605469,209.12301635742188,58.18919372558594,189.12301635742188], [43.78898620605469,90.41798400878906,58.18919372558594,71.07252502441406]];
 
+var coordsNewSectButton = [[12.78898620605469,563.302734375,32.18919372558594,543.302734375], [12.78898620605469,444.8072814941406,32.18919372558594,424.8072814941406], [12.78898620605469,327.66650390625,32.18919372558594,307.66650390625],  
+[12.78898620605469,209.12301635742188,32.18919372558594,189.12301635742188], [12.78898620605469,90.41798400878906,32.18919372558594,71.07252502441406]];
+
 var coords_sect1_Dropdown = [[100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125], [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812], [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219], [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906], [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406]];
+
+var coordsSectionsTextboxes = [[70.09774780273438,91.40765380859375,220.09774780273438,69.40765380859375]];
 
 var sect1_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""]];
 
 var currPageNum = 0;
 
 function createTextboxQuotes(){
-	var crtStr = "var tD = getComboboxTotals();\n" + 
-	"console.println('Event name createTextboxQuotes: ' + event.target.name);\n" +
+var crtStr = "var tD = getComboboxTotals();\n" + 
+	
 	"var currDropdown = event.target.name.slice(-1);\n" +
 	"var textFieldSec1 = this.getField('Section1 TextField' + currDropdown);\n" +
 	"var buttonFieldSec1 = this.getField('Section1 Button' + currDropdown);\n" +
 
 	"var d = this.getField(event.target.name);\n" +
 	"if (d.value != '-Select Question-' && !textFieldSec1){\n" +
+		"if(this.getField('Add Next Section Button')){this.removeField('Add Next Section Button')}\n" +
     		"var j = this.addField(('Section1 TextField' + tD), 'text', currPageNum, (coordsSect1_TextFields[(tD - 1)]));\n" +
 		"j.textSize = 9;\n" +
 		"j.alignment = 'left';\n" +
@@ -25,6 +31,13 @@ function createTextboxQuotes(){
 		"j.strokeColor = color.black;\n" +
 		"j.lineWidth = 1;\n" +
 		"j.multiline = true;\n" +
+		"var m = this.addField('Add Next Section Button', 'button', currPageNum, (coordsNewSectButton[(tD - 1)]));\n" + 
+		"m.borderStyle = border.s;\n" +
+		"m.strokeColor = color.black;\n" +
+		"m.lineWidth = 1;\n" +
+		"m.display = display.noPrint;\n" +
+		"m.buttonSetCaption('+');\n" +
+		//"m.setAction(\"MouseDown\",createNewSectionButton());\n" +  
     		"var b = this.addField('Section1 Button' + tD, 'button', this.pageNum, coordsSect1_Button[(tD - 1)]);\n" +
 		"b.borderStyle = border.s;\n" +
 		"b.strokeColor = color.black;\n" +
@@ -35,13 +48,19 @@ function createTextboxQuotes(){
 "} else if (d.value == '-Select Question-' && textFieldSec1) {\n" +
 	"this.removeField('Section1 TextField' + tD);\n" +
 	"this.removeField('Section1 Button' + tD);\n" +
+	"this.removeField('Add Next Section Button');\n" + 
 "}"
 return crtStr;
+
 }
 
 function getComboboxTotals(){
 	var tD = 0;
 	for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "combobox"){tD++;}}return tD;}
+
+function createNewSectionButton(){
+	
+}
 
 function createButtonQuotes(){
 	var crtStr = "var b = this.getField(\"" + ('Section1 Button' + getComboboxTotals())+ "\");\n" + 
@@ -58,15 +77,13 @@ function createButtonQuotes(){
 
 function createTextbox (){
 	var tD = getComboboxTotals();
-	//console.println("curr td: " + tD);
 	var currDropdown = event.target.name.slice(-1);
-	//console.println("Current Dropdown slice: " + currDropdown);
 	var textFieldSec1 = this.getField("Section1 TextField" + currDropdown);
 	var buttonFieldSec1 = this.getField("Section1 Button" + currDropdown);
 
 	var d = this.getField(event.target.name);
-	//console.println("Event target name: " + event.target.name);
 	if (d.value != "-Select Question-" && !textFieldSec1){
+		if(this.getField("Add Next Section Button")){this.removeField("Add Next Section Button")}
     		var j = this.addField(("Section1 TextField" + tD), "text", currPageNum, (coordsSect1_TextFields[(tD - 1)]));
 		j.textSize = 9;
 		j.alignment = "left";
@@ -74,6 +91,12 @@ function createTextbox (){
 		j.strokeColor = color.black;
 		j.lineWidth = 1;
 		j.multiline = true;
+		var m = this.addField('Add Next Section Button', 'button', currPageNum, (coordsNewSectButton[(tD - 1)]));
+		m.borderStyle = border.s;
+		m.strokeColor = color.black;
+		m.lineWidth = 1;
+		m.display = display.noPrint;
+		m.buttonSetCaption("+");
     		var b = this.addField("Section1 Button" + tD, "button", this.pageNum, coordsSect1_Button[(tD - 1)]);
 		b.borderStyle = border.s;
 		b.strokeColor = color.black;
@@ -84,29 +107,8 @@ function createTextbox (){
 } else if (d.value == "-Select Question-" && textFieldSec1) {
 	this.removeField("Section1 TextField" + tD);
 	this.removeField("Section1 Button" + tD);
+	this.removeField("Add Next Section Button");
 }
 }
 
 createTextbox();
-
-/*if (getComboboxTotals() == 2){
-	var d = this.getField("Dropdown2");
-	d.setAction("Calculate", createTextboxQuotes());
-}
-
-if (getComboboxTotals() == 3){
-	var d = this.getField("Dropdown3");
-	d.setAction("Calculate", createTextboxQuotes());
-}
-
-if (getComboboxTotals() == 4){
-	var d = this.getField("Dropdown4");
-	d.setAction("Calculate", createTextboxQuotes());
-}
-if (getComboboxTotals() == 5){
-	var d = this.getField("Dropdown5");
-	d.setAction("Calculate", createTextboxQuotes());
-}*/
-
-
-
