@@ -15,33 +15,22 @@ var sectionTotals = 0;
 
 var coordsSectionsTextboxes = [[69.13633728027344,701.8602294921875,219.13633728027344,679.8602294921875]];
 
-console.println(coordsSectionsTextboxes[0][2]);
-
 var sect1_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""]];
 
 var currPageNum = 0;
-function getComboboxTotals(){
-	var tD = 0;
-	for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "combobox"){tD++;}}return tD;}
+function getComboboxTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "combobox"){tD++;}}return tD;}
 
 function getSectionFieldstotals() {
     var searchPattern = /^Section \d+$/;
-
     for (var i = 0; i < this.numFields; i++) {
         var fname = this.getNthFieldName(i);
-        if (searchPattern.test(fname)) {
-		sectionTotals++;
-	}
-    }
-}
+        if (searchPattern.test(fname)) {sectionTotals++;}}}
 
 function createTextboxQuotes(){
 var crtStr = "var tD = getComboboxTotals();\n" + 
-	
 	"var currDropdown = event.target.name.slice(-1);\n" +
 	"var textFieldSec1 = this.getField('Section1 TextField' + currDropdown);\n" +
 	"var buttonFieldSec1 = this.getField('Section1 Button' + currDropdown);\n" +
-
 	"var d = this.getField(event.target.name);\n" +
 	"if (d.value != '-Select Question-' && !textFieldSec1){\n" +
 		"if(this.getField('Add Next Section Button')){this.removeField('Add Next Section Button')}\n" +
@@ -77,7 +66,8 @@ return crtStr;
 function createNewSectionButton(){
 	if(this.getField("Section1 Button5")){
 		this.newPage(currPageNum++);
-		var p = this.addField("Section " + (sectionTotals + 1), 'text', currPageNum++, coordsSectionsTextboxes[0]);
+		var p = this.addField("Section " + (sectionTotals + 1), 'text', currPageNum, [ 
+			coordsSectionsTextboxes[0]);
 		p.value = "Section " + (sectionTotals + 1);
 	} else {
 		var o = this.addField("Section " + (sectionTotals + 1), 'text', currPageNum, [
@@ -86,17 +76,16 @@ function createNewSectionButton(){
     			coords_sect1_Dropdown[0][2],
     			coordsSectionsTextboxes[0][3]
 			]);
-		
+		o.value = "Section 2";
+		if(this.numPages > 0) {this.deletePages({nStart: currPageNum});}
 	}
 }
 
-console.println(("[" + coords_sect1_Dropdown[0][0] + "," + coordsSectionsTextboxes[0][1] + "," + coords_sect1_Dropdown[0][2] + "," + coordsSectionsTextboxes[0][3] + "]"));
-
 function createButtonQuotes(){
 	var crtStr = "var b = this.getField(\"" + ('Section1 Button' + getComboboxTotals())+ "\");\n" + 
-	"if (b && this.getField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\")) {\n" + "this.removeField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\"); \n" + 
-"b.buttonSetCaption('+');\n" + 
-"} else{\n" + 
+	"if (b && this.getField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\")) {\n" +"this.removeField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\"); \n" +
+"b.buttonSetCaption('+');\n" +
+"} else{\n" +
 "var k = this.addField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\", \"combobox\", " + currPageNum + ", [" + coords_sect1_Dropdown[getComboboxTotals()] + "]);\n" + 
 "k.setItems([" + sect1_Qs_Formatted[getComboboxTotals()] + "]);\n" + 
 "k.setAction('Calculate',createTextboxQuotes());\n" + 
