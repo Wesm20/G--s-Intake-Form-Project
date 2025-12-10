@@ -1,3 +1,6 @@
+// [ x ll, y ll, x ur, y ur ]
+// [ left coord, bottom coord, right coord, top coord ]
+
 var coordsSect1_TextFields = [[38.36689758300781,651.142333984375,589.9944458007812,566.829833984375], [38.36689758300781,532.6468505859375,589.9945068359375,448.3343811035156], [38.36689758300781,417.1011047363281,589.9944458007812,332.7886657714844], [38.36689758300781,296.96258544921875,589.9944458007812,212.6501007080078], [38.36689758300781,178.912109375,589.9945068359375,94.59962463378906]];
 
 var coordsSect1_Button = [[43.78898620605469,563.302734375,58.18919372558594,543.302734375], [43.78898620605469,444.8072814941406,58.18919372558594,424.8072814941406], [43.78898620605469,327.66650390625,58.18919372558594,307.66650390625],  
@@ -8,11 +11,29 @@ var coordsNewSectButton = [[12.78898620605469,563.302734375,32.18919372558594,54
 
 var coords_sect1_Dropdown = [[100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125], [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812], [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219], [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906], [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406]];
 
-var coordsSectionsTextboxes = [[70.09774780273438,91.40765380859375,220.09774780273438,69.40765380859375]];
+var sectionTotals = 0;
+
+var coordsSectionsTextboxes = [[69.13633728027344,701.8602294921875,219.13633728027344,679.8602294921875]];
+
+console.println(coordsSectionsTextboxes[0][2]);
 
 var sect1_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""]];
 
 var currPageNum = 0;
+function getComboboxTotals(){
+	var tD = 0;
+	for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "combobox"){tD++;}}return tD;}
+
+function getSectionFieldstotals() {
+    var searchPattern = /^Section \d+$/;
+
+    for (var i = 0; i < this.numFields; i++) {
+        var fname = this.getNthFieldName(i);
+        if (searchPattern.test(fname)) {
+		sectionTotals++;
+	}
+    }
+}
 
 function createTextboxQuotes(){
 var crtStr = "var tD = getComboboxTotals();\n" + 
@@ -51,16 +72,18 @@ var crtStr = "var tD = getComboboxTotals();\n" +
 	"this.removeField('Add Next Section Button');\n" + 
 "}"
 return crtStr;
-
 }
-
-function getComboboxTotals(){
-	var tD = 0;
-	for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "combobox"){tD++;}}return tD;}
 
 function createNewSectionButton(){
-	
+	if(this.getField("Section1 Button5")){
+		this.newPage(currPageNum++);
+		var p = this.addField("Section " + (sectionTotals + 1), 'text', currPageNum++, coordsSectionsTextboxes[0]);
+		p.value = "Section " + (sectionTotals + 1);
+	} else {
+		var o = this.addField("Section " + (sectionTotals + 1), 'text', currPageNum++, ("[" + coords_sect1_Dropdown[0][0] + "," + coordsSectionsTextboxes[0][1] + "," + coords_sect1_Dropdown[0][2] + "," + coordsSectionsTextboxes[0][3] + "]"));
+	}
 }
+console.println(("[" + coords_sect1_Dropdown[0][0] + "," + coordsSectionsTextboxes[0][1] + "," + coords_sect1_Dropdown[0][2] + "," + coordsSectionsTextboxes[0][3] + "]"));
 
 function createButtonQuotes(){
 	var crtStr = "var b = this.getField(\"" + ('Section1 Button' + getComboboxTotals())+ "\");\n" + 
