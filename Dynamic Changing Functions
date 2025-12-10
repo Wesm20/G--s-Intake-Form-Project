@@ -80,9 +80,16 @@ function createNewSectionButton(){
 		var p = this.addField("Section " + (sectionTotals + 1), 'text', currPageNum++, coordsSectionsTextboxes[0]);
 		p.value = "Section " + (sectionTotals + 1);
 	} else {
-		var o = this.addField("Section " + (sectionTotals + 1), 'text', currPageNum++, ("[" + coords_sect1_Dropdown[0][0] + "," + coordsSectionsTextboxes[0][1] + "," + coords_sect1_Dropdown[0][2] + "," + coordsSectionsTextboxes[0][3] + "]"));
+		var o = this.addField("Section " + (sectionTotals + 1), 'text', currPageNum, [
+    			coords_sect1_Dropdown[0][0],
+    			coordsSectionsTextboxes[0][1],
+    			coords_sect1_Dropdown[0][2],
+    			coordsSectionsTextboxes[0][3]
+			]);
+		
 	}
 }
+
 console.println(("[" + coords_sect1_Dropdown[0][0] + "," + coordsSectionsTextboxes[0][1] + "," + coords_sect1_Dropdown[0][2] + "," + coordsSectionsTextboxes[0][3] + "]"));
 
 function createButtonQuotes(){
