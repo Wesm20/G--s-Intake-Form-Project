@@ -9,9 +9,14 @@ var coordsSect1_Button = [[43.78898620605469,563.302734375,58.18919372558594,543
 var coordsNewSectButton = [[12.78898620605469,563.302734375,32.18919372558594,543.302734375], [12.78898620605469,444.8072814941406,32.18919372558594,424.8072814941406], [12.78898620605469,327.66650390625,32.18919372558594,307.66650390625],  
 [12.78898620605469,209.12301635742188,32.18919372558594,189.12301635742188], [12.78898620605469,90.41798400878906,32.18919372558594,71.07252502441406]];
 
-var coords_sect1_Dropdown = [[100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125], [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812], [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219], [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906], [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406]];
+var coords_sect1_Dropdown = [[100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125], 
+			     [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812], 
+			     [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219], 
+			     [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906], 
+			     [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406]];
 
 var sectionTotals = 0;
+var sectionButtonTotals = 0;
 
 var coordsSectionsTextboxes = [[69.13633728027344,701.8602294921875,219.13633728027344,679.8602294921875]];
 
@@ -21,12 +26,33 @@ var currPageNum = 0;
 function getComboboxTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "combobox"){tD++;}}return tD;}
 function getButtonTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "button"){tD++;}}return tD;}
 
+function createButtonQuotes(){
+	var crtStr = "var b = this.getField(\"" + ('Section1 Button' + getComboboxTotals())+ "\");\n" + 
+	"if (b && this.getField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\")) {\n" +"this.removeField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\"); \n" +
+"b.buttonSetCaption('+');\n" +
+"} else{\n" +
+"var k = this.addField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\", \"combobox\", " + currPageNum + ", [" + coords_sect1_Dropdown[getComboboxTotals()] + "]);\n" + 
+"k.setItems([" + sect1_Qs_Formatted[getComboboxTotals()] + "]);\n" + 
+"k.setAction('Calculate',createTextboxQuotes());\n" + 
+"b.buttonSetCaption('-');\n" + 
+"}";
+	return crtStr;
+}
+
 function getSectionFieldstotals() {
     var searchPattern = /^Section \d+$/;
     for (var i = 0; i < this.numFields; i++) {
         var fname = this.getNthFieldName(i);
         if (searchPattern.test(fname)) {sectionTotals++;}}
 	return sectionTotals;
+}
+
+function getSectionButtonFieldstotals() {
+    var searchPattern = /^Section \d Button\d+$/;
+    for (var i = 0; i < this.numFields; i++) {
+        var fname = this.getNthFieldName(i);
+        if (searchPattern.test(fname)) {sectionButtonTotals++;}}
+	return sectionButtonTotals;
 }
 
 function createTextboxQuotes(){
@@ -50,7 +76,7 @@ var crtStr = "var tD = getComboboxTotals();\n" +
 		"m.lineWidth = 1;\n" +
 		"m.display = display.noPrint;\n" +
 		"m.buttonSetCaption('+');\n" +
-		"m.setAction(\"MouseDown\"," + createNewSectionButton() + ");\n" +  
+		"m.setAction(\"MouseDown\",createNewSectionButton());\n" +  
     		"var b = this.addField('Section1 Button' + tD, 'button', this.pageNum, coordsSect1_Button[(tD - 1)]);\n" +
 		"b.borderStyle = border.s;\n" +
 		"b.strokeColor = color.black;\n" +
@@ -65,36 +91,31 @@ var crtStr = "var tD = getComboboxTotals();\n" +
 "}"
 return crtStr;
 }
-// console.println("Section totals: " + getSectionFieldstotals());
+console.println("Section totals: " + getSectionFieldstotals());
 function createNewSectionButton(){
 	var buttonTotals = getButtonTotals();
 	// console.println("\nButton totals: " + buttonTotals);
 	var coordsSect1_Button = [[43.78898620605469,563.302734375,58.18919372558594,543.302734375], [43.78898620605469,444.8072814941406,58.18919372558594,424.8072814941406], [43.78898620605469,327.66650390625,58.18919372558594,307.66650390625], [43.78898620605469,209.12301635742188,58.18919372558594,189.12301635742188], [43.78898620605469,90.41798400878906,58.18919372558594,71.07252502441406]];
 	var coordsSectionsTextboxes = [[69.13633728027344,701.8602294921875,219.13633728027344,679.8602294921875]];
 	var newSectCoords = [coordsSectionsTextboxes[0][0], coordsSect1_Button[(buttonTotals - 1)][1], coordsSectionsTextboxes[0][2], coordsSect1_Button[(buttonTotals - 1)][3]];
-	var currPageNum = this.pageNum;
-		var h = "if(this.getField('Section1 Button5')){\n" +
-		"this.newPage(" + currPageNum++  + ");\n" +
+		var h = 
+	"if(this.getField('Section1 Button5')){\n" +
+		"this.newPage(" + (currPageNum + 1)  + ");\n" +
 		"var p = this.addField(\"Section " + (buttonTotals +  1) + "\", \"text\", " + currPageNum + ", [" + newSectCoords + "]);\n" +
 		"p.value = 'Section " + (buttonTotals + 1) + "';\n" +
-	"} else {\n" +
+	"} else if (\!this.getField('Section " + (buttonTotals +  1) + "')){\n" +
+		"this.removeField('Section1 Button" + buttonTotals + "');\n" +
 		"var o = this.addField(\"Section " + (buttonTotals +  1) + "\", \"text\", " + currPageNum + ", [" + newSectCoords + "]);\n" +
 		"o.value = 'Section " + (buttonTotals +  1) + "';\n" +
-		"if(this.numPages > 0) {this.deletePages({nStart: " + currPageNum + "})};}"
+		"if(" + currPageNum + " > 0) {\n" + 
+			"this.deletePages({nStart: " + currPageNum + ", nEnd: " + currPageNum + "})\n" +
+		"}\n" +
+	"} else if (this.getField('Section " + (buttonTotals +  1) + "')) {\n" +
+		"this.removeField('Section " + (buttonTotals +  1) + "');\n" +
+		"this.removeField('Section1 Button" + buttonTotals + "');\n" +
+		"this.removeField('Dropdown" + tD + "');\n" +
+	"}"
 	return h;
-}
-
-function createButtonQuotes(){
-	var crtStr = "var b = this.getField(\"" + ('Section1 Button' + getComboboxTotals())+ "\");\n" + 
-	"if (b && this.getField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\")) {\n" +"this.removeField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\"); \n" +
-"b.buttonSetCaption('+');\n" +
-"} else{\n" +
-"var k = this.addField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\", \"combobox\", " + currPageNum + ", [" + coords_sect1_Dropdown[getComboboxTotals()] + "]);\n" + 
-"k.setItems([" + sect1_Qs_Formatted[getComboboxTotals()] + "]);\n" + 
-"k.setAction('Calculate',createTextboxQuotes());\n" + 
-"b.buttonSetCaption('-');\n" + 
-"}";
-	return crtStr;
 }
 
 function createTextbox (){
@@ -120,18 +141,18 @@ function createTextbox (){
 		m.display = display.noPrint;
 		m.buttonSetCaption("+");
 		m.setAction("MouseDown", createNewSectionButton());
-    		var b = this.addField("Section1 Button" + tD, "button", this.pageNum, coordsSect1_Button[(tD - 1)]);
+    		var b = this.addField("Section1 Button" + tD, "button", currPageNum, coordsSect1_Button[(tD - 1)]);
 		b.borderStyle = border.s;
 		b.strokeColor = color.black;
 		b.lineWidth = 1;
 		b.display = display.noPrint;
 		b.buttonSetCaption("+");
 		b.setAction("MouseDown",createButtonQuotes());
-} else if (d.value == "-Select Question-" && textFieldSec1) {
-	this.removeField("Section1 TextField" + tD);
-	this.removeField("Section1 Button" + tD);
-	this.removeField("Add Next Section Button");
-}
+	} else if (d.value == "-Select Question-" && textFieldSec1) {
+		this.removeField("Section1 TextField" + tD);
+		this.removeField("Section1 Button" + tD);
+		this.removeField("Add Next Section Button");
+	}
 }
 
 createTextbox();
