@@ -28,13 +28,14 @@ function getButtonTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {
 
 function createButtonQuotes(){
 	var crtStr = "var b = this.getField(\"" + ('Section1 Button' + getComboboxTotals())+ "\");\n" + 
-	"if (b && this.getField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\")) {\n" +"this.removeField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\"); \n" +
-"b.buttonSetCaption('+');\n" +
-"} else{\n" +
-"var k = this.addField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\", \"combobox\", " + currPageNum + ", [" + coords_sect1_Dropdown[getComboboxTotals()] + "]);\n" + 
-"k.setItems([" + sect1_Qs_Formatted[getComboboxTotals()] + "]);\n" + 
-"k.setAction('Calculate',createTextboxQuotes());\n" + 
-"b.buttonSetCaption('-');\n" + 
+	"if (b && this.getField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\")) {\n" +
+		"this.removeField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\"); \n" +
+		"b.buttonSetCaption('+');\n" +
+		"} else{\n" +
+	"var k = this.addField(\"" + (event.target.name.slice(0,-1) + (getComboboxTotals() + 1)) + "\", \"combobox\", " + currPageNum + ", [" + coords_sect1_Dropdown[getComboboxTotals()] + "]);\n" + 
+	"k.setItems([" + sect1_Qs_Formatted[getComboboxTotals()] + "]);\n" + 
+	"k.setAction('Calculate',createTextboxQuotes());\n" + 
+	"b.buttonSetCaption('-');\n" + 
 "}";
 	return crtStr;
 }
@@ -91,7 +92,8 @@ var crtStr = "var tD = getComboboxTotals();\n" +
 "}"
 return crtStr;
 }
-console.println("Section totals: " + getSectionFieldstotals());
+
+//console.println("Section totals: " + getSectionFieldstotals());
 function createNewSectionButton(){
 	var buttonTotals = getButtonTotals();
 	// console.println("\nButton totals: " + buttonTotals);
@@ -112,8 +114,8 @@ function createNewSectionButton(){
 		"}\n" +
 	"} else if (this.getField('Section " + (buttonTotals +  1) + "')) {\n" +
 		"this.removeField('Section " + (buttonTotals +  1) + "');\n" +
-		"this.removeField('Section1 Button" + buttonTotals + "');\n" +
-		"this.removeField('Dropdown" + tD + "');\n" +
+		//"this.removeField('Section1 Button" + buttonTotals + "');\n" +
+		"this.removeField('Dropdown" + getComboboxTotals() + "');\n" +
 	"}"
 	return h;
 }
