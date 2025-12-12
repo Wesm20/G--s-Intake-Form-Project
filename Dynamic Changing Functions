@@ -107,7 +107,7 @@ function createNewSectionButton(){
 		var h = 
 	"if(this.getField('Section1 Button5')){\n" +
 		"this.newPage(" + (currPageNum + 1)  + ");\n" +
-		"var p = this.addField(\"Section " + (fieldTotals +  1) + "\", \"text\", " + currPageNum + ", [" + newSectCoords + "]);\n" +
+		"var p = this.addField(\"Section " + (fieldTotals +  1) + "\", \"text\", " + (currPageNum + 1) + ", [" + newSectCoords + "]);\n" +
 		"p.value = 'Section " + (fieldTotals + 1) + "';\n" +
 		"var d = this.getField('Add Next Section Button');\n" +
 		"d.buttonSetCaption('-');\n" +
