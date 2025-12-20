@@ -1,4 +1,5 @@
 // NEED TO ADD ------ text fields that dynamically restart numbering after new section ------------
+// No header for additional pages - client name, date, session # on first page only
 
 /*Section 1 - 69.13630676269531,701.8599853515625,219.13600158691406,679.8599853515625
 Dropdown 1 = 99.16239929199219,678.3800048828125,225.08299255371094,658.3800048828125
@@ -36,7 +37,7 @@ function getButtonTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {
 
 function createButtonQuotes(){
 
-	if (sectTotals > 1 && this.numPages == 1){
+	if (getSectionFieldstotals() > 1 && this.numPages == 1){
 		var coords_sect1_Dropdown = [[100.13999938964844,660.8100048828125,226.06100463867188,640.8100048828125], 
 		     [99.958984375,544.4801098632812,225.8800048828125,524.4801098632812], 
 		     [99.40370178222656,425.9846569824219,225.32472229003906,405.9846569824219], 
@@ -53,7 +54,7 @@ function createButtonQuotes(){
 
 	var crtStr = 
 	
-	"var b = this.getField(\"" + ('Section1 Button' + getComboboxTotals())+ "\");\n" + 
+	"var b = this.getField(\"" + ('Section' + getSectionFieldstotals() + ' Button' + getComboboxTotals())+ "\");\n" + 
 	"if (b && this.getField(\"" + ('Dropdown' + (getComboboxTotals() + 1)) + "\")) {\n" +
 		"this.removeField(\"" + ('Dropdown' + (getComboboxTotals() + 1)) + "\"); \n" +
 		"b.buttonSetCaption('+');\n" +
@@ -159,6 +160,7 @@ function createNewSectionButton(){
 	var newButtonCoords = coordsSect1_Button[ (getButtonTotals() - 1) ];
 	var newSectButtonTotal = getSectionButtonFieldstotals();
 	var sect2_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""]];
+	if ( 
 		var h = 
 	"if(this.getField('Section1 Button5')){\n" +
 		"this.newPage(" + (currPageNum + 1)  + ");\n" +
