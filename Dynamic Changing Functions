@@ -50,11 +50,32 @@ function createButtonQuotes(){
 	return crtStr;
 }
 
-function getSectionFieldstotals() {var searchPattern = /^Section \d+$/;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionTotals++;}}return sectionTotals;}
+function getSectionFieldstotals() {var searchPattern = /^Section \d+$/;var sectionTotals = 0;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionTotals++;}}return sectionTotals;}
 
-function getSectionButtonFieldstotals() {var searchPattern = /^Section1 Button\d+$/;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionButtonTotals++;}}return sectionButtonTotals;}
+function getSectionButtonFieldstotals() {var searchPattern = /^Section1 Button\d+$/;var sectionButtonTotals = 0;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionButtonTotals++;}}return sectionButtonTotals;}
 
 function createTextboxQuotes(){
+var coordsSect1_TextFields = [[38.36689758300781,651.142333984375,589.9944458007812,566.829833984375], [38.36689758300781,532.6468505859375,589.9945068359375,448.3343811035156], [38.36689758300781,417.1011047363281,589.9944458007812,332.7886657714844], [38.36689758300781,296.96258544921875,589.9944458007812,212.6501007080078], [38.36689758300781,178.912109375,589.9945068359375,94.59962463378906]];
+
+var coordsSect1_Button = [[43.78898620605469,563.302734375,58.18919372558594,543.302734375], [43.78898620605469,444.8072814941406,58.18919372558594,424.8072814941406], [43.78898620605469,327.66650390625,58.18919372558594,307.66650390625],  
+[43.78898620605469,209.12301635742188,58.18919372558594,189.12301635742188], [43.78898620605469,90.41798400878906,58.18919372558594,71.07252502441406]];
+
+var coordsNewSectButton = [[12.78898620605469,563.302734375,32.18919372558594,543.302734375], [12.78898620605469,444.8072814941406,32.18919372558594,424.8072814941406], [12.78898620605469,327.66650390625,32.18919372558594,307.66650390625],  
+[12.78898620605469,209.12301635742188,32.18919372558594,189.12301635742188], [12.78898620605469,90.41798400878906,32.18919372558594,71.07252502441406]];
+	var tD = getComboboxTotals();
+	var sectTotals = getSectionFieldstotals();
+	//console.println("Section totals: " + sectTotals);
+if (sectTotals > 1 && this.numPages == 1){
+	console.println("Selecting fields with more than 1 section and on page 1");
+	var newCoordTextFields = "[" + coordsSect1_TextFields[(tD - 1)][0] + ", " + (coordsSect1_TextFields[(tD - 1)][1] - 17.57) + ", " + coordsSect1_TextFields[(tD - 1)][2] + ", " + (coordsSect1_TextFields[(tD - 1)][3] - 17.57) + "]";
+	var newcoordNextSectBut = "[" + coordsNewSectButton[(tD - 1)][0] + ", " + (coordsNewSectButton[(tD - 1)][1] - 17.57) + ", " + coordsNewSectButton[(tD - 1)][2] + ", " + (coordsNewSectButton[(tD - 1)][3] - 17.57) + "]";
+	var newCoordAddDDBut = "[" + coordsSect1_Button[(tD - 1)][0] + ", " + (coordsSect1_Button[(tD - 1)][1] - 17.57) + ", " + coordsSect1_Button[(tD - 1)][2] + ", " + (coordsSect1_Button[(tD - 1)][3] - 17.57) + "]";
+} else {
+	console.println("Selecting fields without a section!");
+	var newCoordTextFields = "[" + coordsSect1_TextFields[(tD - 1)][0] + ", " + (coordsSect1_TextFields[(tD - 1)][1]) + ", " + coordsSect1_TextFields[(tD - 1)][2] + ", " + (coordsSect1_TextFields[(tD - 1)][3]) + "]";
+	var newcoordNextSectBut = "[" + coordsNewSectButton[(tD - 1)][0] + ", " + coordsNewSectButton[(tD - 1)][1] + ", " + coordsNewSectButton[(tD - 1)][2] + ", " + (coordsNewSectButton[(tD - 1)][3]) + "]";
+	var newCoordAddDDBut = "[" + coordsSect1_Button[(tD - 1)][0] + ", " + coordsSect1_Button[(tD - 1)][1] + ", " + coordsSect1_Button[(tD - 1)][2] + ", " + coordsSect1_Button[(tD - 1)][3] + "]";
+}
 var crtStr = "var tD = getComboboxTotals();\n" + 
 	"var currDropdown = event.target.name.slice(-1);\n" +
 	"var sectTotals = getSectionFieldstotals();\n" +
