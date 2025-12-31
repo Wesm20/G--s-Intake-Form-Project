@@ -24,6 +24,7 @@ var NewSectStart = [12.788986206054688,563.302734375,32.18919372558594,543.30273
 
 ==================================================================================================================================
 
+
 Box name: Add Next Section Button. Box rect: 12.78900146484375,90.41799926757812,32.189208984375,71.072509765625
 Box name: Client Name ID. 	   Box rect: 143.2519989013672,737.843017578125,242.28500366210938,709.0430297851562
 Box name: Date. 		   Box rect: 315.41400146484375,738.0440063476562,419.4540100097656,709.2440185546875
@@ -51,7 +52,9 @@ Add new section button  = 12.788986206054688,563.302734375,32.18919372558594,543
 
 [ left vertical line x-coord, top horizontal line y-coord, right vertical line x-coord, bottom horizonal line y-coord ]
 
+
 /*
-for (
-var j = 
+Dropdown, add new sect button, new dropdown button and section textfield height = 20
+Textfield height 								= 84.31
+Gap between fields								= 5.5 (test value, could be modified)
 */
