@@ -41,6 +41,9 @@ function getSectionFieldstotals() {var searchPattern = /^Section \d+$/;var secti
 function getSectionButtonFieldstotals() {var searchPattern = /Section\d+\sButton\d+/;var sectionButtonTotals = 0;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionButtonTotals++;}}return sectionButtonTotals;}
 
 
+// Return number of fields with name of "Section# TextField#" //
+function getTextFieldstotals() {var searchPattern = /Section\d+\sTextField\d+/;var sectionButtonTotals = 0;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionButtonTotals++;}}return sectionButtonTotals;}
+
 function createButtonQuotes(){
 	var crtStr = 
 	"var b = this.getField(\"" + ('Section' + getSectionFieldstotals() + ' Button' + getComboboxTotals())+ "\");\n" + 
@@ -76,7 +79,9 @@ var crtStr =
 	//"console.println('Event target name: ' + event.target.name);\n" +
 	"if (d.value != '-Select Question-' && !textFieldSec1){\n" +
 		"if(this.getField('Add Next Section Button')){this.removeField('Add Next Section Button')}\n" +
-    		"var j = this.addField('Section" + sectTotals + " TextField" + tD + "', 'text', " + currPageNum + ", [" + newCoordTextFields + "]);\n" +
+    		"var j = this.addField('Section" + sectTotals + " TextField" + tD + "', 'text', " + currPageNum + ", [" + textField1[0], 
+															((textField1[1] + ((sectTotals - 1) * 25.5) + (()  + 
+															"]);\n" +
 		"j.textSize = 9;\n" +
 		"j.alignment = 'left';\n" +
 		"j.borderStyle = border.s;\n" +
