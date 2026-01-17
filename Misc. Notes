@@ -56,5 +56,5 @@ Add new section button  = 12.788986206054688,563.302734375,32.18919372558594,543
 /*
 Dropdown, add new sect button, new dropdown button and section textfield height = 20
 Textfield height 								= 84.31
-Gap between fields								= 5.5 (test value, could be modified)
+Gap between fields								= 7.238 (test value, could be modified)
 */
