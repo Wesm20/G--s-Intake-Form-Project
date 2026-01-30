@@ -1,5 +1,3 @@
-
-
 // NEED TO ADD ------ text fields that dynamically restart numbering after new section ------------
 // No header for additional pages - client name, date, session # on first page only
 // Dynamically rename textfields based on section numbers -- Sect1 Text1, Text2, Sect2 Text1 etc. --
