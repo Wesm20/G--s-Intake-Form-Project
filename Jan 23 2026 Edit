@@ -13,11 +13,7 @@ Generate horizontal height PLUS gap between lowest field
 
 exampleButton = [43.78898620605469, ((563.302734375 + (6.398 * #textFields)) * # buttons), 58.18919372558594, ((543.302734375 + (6.398 * #textFields)) * # buttons)*/
 
-function lowLine(){
-	var lowestLine = 864;
-	for (var i = 0; i < this.numFields; i++){var j = this.getField(this.getNthFieldName(i)); if ( j.rect[3] < lowestLine) {lowestLine = j.rect[3];}}
-	return lowestLine;
-}
+function lowLine(){	var lowestLine = 864;for (var i = 0; i < this.numFields; i++){var j = this.getField(this.getNthFieldName(i)); if ( j.rect[3] < lowestLine) {lowestLine = j.rect[3];}}return lowestLine;}
 
 var DD1 = [99.16239929199219,678.3800048828125,225.08299255371094,658.3800048828125];
 var textField1 = [39.02143859863281,643.9422607421875,590.6489868164062,559.6297607421875];
@@ -104,8 +100,7 @@ var crtStr =
 	//"console.println('Event target name: ' + event.target.name);\n" +
 	"if (d.value != '-Select Question-' && !textFieldSec1){\n" +
 		"if(this.getField('Add Next Section Button')){this.removeField('Add Next Section Button')}\n" +
-    		"var j = this.addField('Section" + sectTotals + " TextField" + tD + "', 'text', " + currPageNum + ", [" + textField1[0] + ", " + (lowestLine - 6.398 - ((sectTotals - 1) * 26)) + ", " + textField1[2] + ", " + 
-															(lowestLine - 84.31 - ((sectTotals - 1) * 26)) + "]);\n" +
+    		"var j = this.addField('Section" + sectTotals + " TextField" + tD + "', 'text', " + currPageNum + ", [" + textField1[0] + ", " + (lowestLine - 6.398 - ((sectTotals - 1) * 26)) + ", " + textField1[2] + ", " + (lowestLine - 84.31 - ((sectTotals - 1) * 26)) + "]);\n" +
 		"j.textSize = 9;\n" +
 		"j.alignment = 'left';\n" +
 		"j.borderStyle = border.s;\n" +
