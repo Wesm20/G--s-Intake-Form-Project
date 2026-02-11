@@ -1,0 +1,190 @@
+// NEED TO ADD ------ text fields that dynamically restart numbering after new section ------------
+
+/*Section 1 - 69.13630676269531,701.8599853515625,219.13600158691406,679.8599853515625
+Dropdown 1 = 99.16239929199219,678.3800048828125,225.08299255371094,658.3800048828125
+
+new dropdown rect = (dropdown 1[0]), (dropdown 1[1] - 23.47), (dropdown 1 [2] + 5.94), (dropdown 1 [3] - 21.4799)*/
+
+// [ x ll, y ll, x ur, y ur ]
+// [ left vertical line x-coord, top horizontal line y-coord, right vertical line x-coord, bottom horizonal line y-coord ]
+
+var coordsSect1_TextFields = [[38.36689758300781,651.142333984375,589.9944458007812,566.829833984375], [38.36689758300781,532.6468505859375,589.9945068359375,448.3343811035156], [38.36689758300781,417.1011047363281,589.9944458007812,332.7886657714844], [38.36689758300781,296.96258544921875,589.9944458007812,212.6501007080078], [38.36689758300781,178.912109375,589.9945068359375,94.59962463378906]];
+
+var coordsSect1_Button = [[43.78898620605469,563.302734375,58.18919372558594,543.302734375], [43.78898620605469,444.8072814941406,58.18919372558594,424.8072814941406], [43.78898620605469,327.66650390625,58.18919372558594,307.66650390625],  
+[43.78898620605469,209.12301635742188,58.18919372558594,189.12301635742188], [43.78898620605469,90.41798400878906,58.18919372558594,71.07252502441406]];
+
+var coordsNewSectButton = [[12.78898620605469,563.302734375,32.18919372558594,543.302734375], [12.78898620605469,444.8072814941406,32.18919372558594,424.8072814941406], [12.78898620605469,327.66650390625,32.18919372558594,307.66650390625],  
+[12.78898620605469,209.12301635742188,32.18919372558594,189.12301635742188], [12.78898620605469,90.41798400878906,32.18919372558594,71.07252502441406]];
+
+var coords_sect1_Dropdown = [[100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125], 
+			     [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812], 
+			     [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219], 
+			     [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906], 
+			     [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406]];
+
+var sectionTotals = 0;
+var sectionButtonTotals = 0;
+
+var coordsSectionsTextboxes = [[69.13633728027344,701.8602294921875,219.13633728027344,679.8602294921875]];
+
+var sect1_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""]];
+
+var sect2_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""]];
+
+var currPageNum = 0;
+
+function getComboboxTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "combobox"){tD++;}}return tD;}
+function getButtonTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "button"){tD++;}}return tD;}
+
+function createButtonQuotes(){
+	var crtStr = "var b = this.getField(\"" + ('Section1 Button' + getComboboxTotals())+ "\");\n" + 
+	"if (b && this.getField(\"" + ('Dropdown' + (getComboboxTotals() + 1)) + "\")) {\n" +
+		"this.removeField(\"" + ('Dropdown' + (getComboboxTotals() + 1)) + "\"); \n" +
+		"b.buttonSetCaption('+');\n" +
+	"} else{\n" +
+		"var k = this.addField(\"" + ('Dropdown' + (getComboboxTotals() + 1)) + "\", \"combobox\", " + currPageNum + ", [" + coords_sect1_Dropdown[getComboboxTotals()] + "]);\n" + 
+		"k.setItems([" + sect1_Qs_Formatted[getComboboxTotals()] + "]);\n" + 
+		"k.setAction('Calculate',createTextboxQuotes());\n" + 
+		"b.buttonSetCaption('-');\n" + 
+	"}";
+	return crtStr;
+}
+
+function getSectionFieldstotals() {var searchPattern = /^Section \d+$/;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionTotals++;}}return sectionTotals;}
+
+function getSectionButtonFieldstotals() {var searchPattern = /^Section1 Button\d+$/;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionButtonTotals++;}}return sectionButtonTotals;}
+
+function createTextboxQuotes(){
+var crtStr = "var tD = getComboboxTotals();\n" + 
+	"var currDropdown = event.target.name.slice(-1);\n" +
+	"var sectTotals = getSectionFieldstotals();\n" +
+	"var textFieldSec1 = this.getField('Section' + sectTotals + ' TextField' + currDropdown);\n" +
+	"var buttonFieldSec1 = this.getField('Section' + sectTotals + ' Button' + currDropdown);\n" +
+	"var d = this.getField(event.target.name);\n" +
+	"console.println('Event target name: ' + event.target.name);\n" +
+	"if (d.value != '-Select Question-' && !textFieldSec1){\n" +
+		"if(this.getField('Add Next Section Button')){this.removeField('Add Next Section Button')}\n" +
+    		"var j = this.addField(('Section' + sectTotals + ' TextField' + tD), 'text', currPageNum, ([" + coordsSect1_TextFields[(tD - 1)][0] + ", " + (coordsSect1_TextFields[(tD - 1)][1] - 17.57) + ", " + coordsSect1_TextFields[(tD - 1)][2] + ", " + (coordsSect1_TextFields[(tD - 1)][3] - 17.57) + "]));\n" +
+		"j.textSize = 9;\n" +
+		"j.alignment = 'left';\n" +
+		"j.borderStyle = border.s;\n" +
+		"j.strokeColor = color.black;\n" +
+		"j.lineWidth = 1;\n" +
+		"j.multiline = true;\n" +
+		"var m = this.addField('Add Next Section Button', 'button', currPageNum, ([" + coordsNewSectButton[(tD - 1)][0] + ", " + (coordsNewSectButton[(tD - 1)][1] - 17.57) + ", " + coordsNewSectButton[(tD - 1)][2] + ", " + (coordsNewSectButton[(tD - 1)][3] - 17.57) + "]));\n" + 
+		"m.borderStyle = border.s;\n" +
+		"m.strokeColor = color.black;\n" +
+		"m.lineWidth = 1;\n" +
+		"m.display = display.noPrint;\n" +
+		"m.buttonSetCaption('+');\n" +
+		"m.setAction(\"MouseDown\",createNewSectionButton());\n" +  
+    		"var b = this.addField('Section' + sectTotals + ' Button' + tD, 'button', this.pageNum, ([" + coordsSect1_Button[(tD - 1)][0] + ", " + (coordsSect1_Button[(tD - 1)][1] - 17.57) + ", " + coordsSect1_Button[(tD - 1)][2] + ", " + (coordsSect1_Button[(tD - 1)][3] - 17.57) + "]));\n" +
+		"b.borderStyle = border.s;\n" +
+		"b.strokeColor = color.black;\n" +
+		"b.lineWidth = 1;\n" +
+		"b.display = display.noPrint;\n" + 
+		"b.buttonSetCaption('+');\n" +
+		"b.setAction(\"MouseDown\",createButtonQuotes());\n" +
+"} else if (d.value == '-Select Question-' && textFieldSec1) {\n" +
+	"this.removeField('Section' + sectTotals + ' TextField' + tD);\n" +
+	"this.removeField('Section' + sectTotals + ' Button' + tD);\n" +
+	"this.removeField('Add Next Section Button');\n" + 
+"}"
+return crtStr;
+}
+
+//console.println("Section totals: " + getSectionFieldstotals());
+function createNewSectionButton(){
+	var buttonTotals = getButtonTotals();
+	var dropdownTotals = getComboboxTotals();
+	var fieldTotals = getSectionFieldstotals();
+	// console.println("\nButton totals: " + buttonTotals);
+	var coordsSect1_Button = [[43.78898620605469,563.302734375,58.18919372558594,543.302734375], [43.78898620605469,444.8072814941406,58.18919372558594,424.8072814941406], [43.78898620605469,327.66650390625,58.18919372558594,307.66650390625], [43.78898620605469,209.12301635742188,58.18919372558594,189.12301635742188], [43.78898620605469,90.41798400878906,58.18919372558594,71.07252502441406]];
+	var coordsSectionsTextboxes = [[69.13633728027344,701.8602294921875,219.13633728027344,679.8602294921875]];
+	var newSectCoords = [coordsSectionsTextboxes[0][0], coordsSect1_Button[(buttonTotals - 1)][1], coordsSectionsTextboxes[0][2], coordsSect1_Button[(buttonTotals - 1)][3]];
+	var coords_sect1_Dropdown = [[100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125], [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812], 	     [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219], [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906], 	     [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406]];
+var newDDCoords = [(coords_sect1_Dropdown[dropdownTotals][0]), (coords_sect1_Dropdown[dropdownTotals][1] - 23.47), (coords_sect1_Dropdown[dropdownTotals][2]), (coords_sect1_Dropdown[dropdownTotals][3] - 21.4799)];
+	var newButtonCoords = coordsSect1_Button[ (getButtonTotals() - 1) ];
+	var newSectButtonTotal = getSectionButtonFieldstotals();
+	var sect2_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""]];
+		var h = 
+	"if(this.getField('Section1 Button5')){\n" +
+		"this.newPage(" + (currPageNum + 1)  + ");\n" +
+		"var p = this.addField(\"Section " + (fieldTotals +  1) + "\", \"text\", " + (currPageNum + 1) + ", [" + newSectCoords + "]);\n" +
+		"p.value = 'Section " + (fieldTotals + 1) + "';\n" +
+		"var d = this.getField('Add Next Section Button');\n" +
+		"d.buttonSetCaption('-');\n" +
+		"var h = this.addField('Dropdown" + (getComboboxTotals() + 1) + "', 'combobox', " + currPageNum + ", [" + newDDCoords + "])\n" +
+		"h.setItems([" + sect2_Qs_Formatted[0] + "]);\n" +
+		"h.setAction('Calculate',  createTextboxQuotes())\n" +
+		"console.println('Running if section1 button5 exists');\n" +
+	"} else if (\!this.getField('Section " + (fieldTotals +  1) + "')){\n" +
+		"this.removeField('Section1 Button" + getButtonTotals() + "');\n" +
+		"var o = this.addField(\"Section " + (fieldTotals +  1) + "\", \"text\", " + currPageNum + ", [" + newSectCoords + "]);\n" +
+		"o.value = 'Section " + (fieldTotals +  1) + "';\n" +
+		"var d = this.getField('Add Next Section Button');\n" +
+		"d.buttonSetCaption('-');\n" +
+		"if(" + currPageNum + " > 0) {\n" + 
+			"this.deletePages({nStart: " + currPageNum + ", nEnd: " + currPageNum + "})\n" +
+		"}\n" +
+		"var h = this.addField('Dropdown" + (getComboboxTotals() + 1) + "', 'combobox', " + currPageNum + ", [" + newDDCoords + "])\n" +
+		"h.setItems([" + sect2_Qs_Formatted[0] + "]);\n" + 
+		"h.setAction('Calculate',  createTextboxQuotes())\n" +
+		"console.println('Running if another button exists');\n" +
+	"} else if (this.getField('Section " + (fieldTotals + 1) + "')) {\n" +
+		"this.removeField('Section " + (fieldTotals + 1) + "');\n" +
+		//"this.addField('Section1 Button" + newSectButtonTotal + "', 'button', this.pageNum, coordsSect1_Button[(" + getButtonTotals() + " - 1)]);\n" +
+		//"this.removeField('Section1 Button" + newSectButtonTotal + "');\n" +
+		"this.removeField('Dropdown" + (getComboboxTotals() + 1) + "');\n" +
+		"console.println('Running if section field exists');\n" +
+		"var d = this.getField('Add Next Section Button');\n" +
+		"d.buttonSetCaption('+');\n" +
+		"var p = this.addField('Section1 Button" + (newSectButtonTotal + 1) + "', 'button', " + currPageNum + ", [" + newButtonCoords + "]);\n" +
+		"p.borderStyle = border.s;\n" +
+		"p.strokeColor = color.black;\n" +
+		"p.lineWidth = 1;\n" +
+		"p.display = display.noPrint;\n" + 
+		"p.buttonSetCaption('+');\n" +
+		"p.setAction(\"MouseDown\",createButtonQuotes());\n" +
+	"}"
+	return h;
+}
+
+function createTextbox (){
+	var tD = getComboboxTotals();
+	var currDropdown = event.target.name.slice(-1);
+	var textFieldSec1 = this.getField("Section1 TextField" + currDropdown);
+	var buttonFieldSec1 = this.getField("Section1 Button" + currDropdown);
+
+	var d = this.getField(event.target.name);
+	if (d.value != "-Select Question-" && !textFieldSec1){
+		if(this.getField("Add Next Section Button")){this.removeField("Add Next Section Button")}
+    		var j = this.addField(("Section1 TextField" + tD), "text", currPageNum, (coordsSect1_TextFields[(tD - 1)]));
+		j.textSize = 9;
+		j.alignment = "left";
+		j.borderStyle = border.s;
+		j.strokeColor = color.black;
+		j.lineWidth = 1;
+		j.multiline = true;
+		var m = this.addField('Add Next Section Button', 'button', currPageNum, (coordsNewSectButton[(tD - 1)]));
+		m.borderStyle = border.s;
+		m.strokeColor = color.black;
+		m.lineWidth = 1;
+		m.display = display.noPrint;
+		m.buttonSetCaption("+");
+		m.setAction("MouseDown", createNewSectionButton());
+    		var b = this.addField("Section1 Button" + tD, "button", currPageNum, coordsSect1_Button[(tD - 1)]);
+		b.borderStyle = border.s;
+		b.strokeColor = color.black;
+		b.lineWidth = 1;
+		b.display = display.noPrint;
+		b.buttonSetCaption("+");
+		b.setAction("MouseDown",createButtonQuotes());
+	} else if (d.value == "-Select Question-" && textFieldSec1) {
+		this.removeField("Section1 TextField" + tD);
+		this.removeField("Section1 Button" + tD);
+		this.removeField("Add Next Section Button");
+	}
+}
+
+createTextbox();
