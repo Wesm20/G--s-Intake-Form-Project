@@ -1,0 +1,158 @@
+//var init_Frame_Location = [39.79621887207031,651.142333984375,591.4237670898438,566.829833984375];
+//var init_Button_Location = [42.80717468261719,563.302734375,57.20738220214844,543.302734375];
+
+
+
+// ---------------------------------------------------
+var textBoxName_Sect1_Q1 = "Section1 Textbox1";
+var textBoxName_Sect1_Q2 = "Section1 Textbox2";
+
+var questions_Sec1_Box1 = ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""];
+var questions_Sec1_Box2 = ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""];
+var questions_Sec1_Box3 = ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""];
+var questions_Sec1_Box4 = ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""];
+var questions_Sec1_Box5 = ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""];
+
+var sect1_TextField1_RECT = [38.36689758300781,651.142333984375,589.9944458007812,566.829833984375];
+var sect1_TextField2_RECT = [38.36689758300781,532.6468505859375,589.9945068359375,448.3343811035156];
+var sect1_TextField3_RECT = [38.36689758300781,417.1011047363281,589.9944458007812,332.7886657714844];
+var sect1_TextField4_RECT = [38.36689758300781,296.96258544921875,589.9944458007812,212.6501007080078];
+var sect1_TextField5_RECT = [38.36689758300781,178.912109375,589.9945068359375,94.59962463378906];
+
+var sect1_Dropdown1 = [100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125];
+var sect1_Dropdown2 = [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812];
+var sect1_Dropdown3 = [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219];
+var sect1_Dropdown4 = [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906];
+var sect1_Dropdown5 = [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406];
+
+var sect1_Button1 = [43.78898620605469,563.302734375,58.18919372558594,543.302734375];
+var sect1_Button2 = [43.78898620605469,327.66650390625,58.18919372558594,307.66650390625];
+var sect1_Button3 = [43.78898620605469,444.8072814941406,58.18919372558594,424.8072814941406];
+var sect1_Button4 = [43.78898620605469,209.12301635742188,58.18919372558594,189.12301635742188];
+var sect1_Button5 = [43.78898620605469,90.41798400878906,58.18919372558594,71.07252502441406];
+
+
+function test_button_press(currButton, nextDD, ddRect) {
+    var catStr = 
+        "var b = this.getField(\"" + currButton + "\");\n" +
+        "if (b && this.getField(\"" + nextDD + "\")) {\n" +
+        "    this.removeField(\"" + nextDD + "\");\n" +
+        "    b.buttonSetCaption('+');\n" +
+        "} else {\n" +
+        "    var k = this.addField(\"" + nextDD + "\", 'combobox', this.pageNum, [" + ddRect + "]);\n" +
+        "    k.setItems([" + questions_Sec1_Box2 + "]);\n" +
+	"    k.setAction('MouseDown', add_Data_Frame(sect1_TextField2_RECT, sect1_Button2, 'Dropdown2', questions_Sec1_Box3,textBoxName_Sect1_Q2));\n" + 
+        "    b.buttonSetCaption('-');\n" +
+        "}\n";
+
+    return catStr;
+}
+
+function add_Data_Frame(textFrameLocation, button_Location, currDD, DDQuestions, textBox_Name){
+	var d = this.getField(currDD);
+	var e = this.getField(textBox_Name);
+	var textFrameLocation = textFrameLocation;
+	//var b_Arr1 = button_Location;
+	var textFieldSec1 = this.getField(textBox_Name);
+	var buttonFieldSec1 = this.getField("Section1 Button1");
+
+	// Create text box if Selected Question is not selected and a textfield doesn't exist
+	if (d.value != "-Select Question-" && !e){
+		var j = this.addField("Section1 TextField1", "text", this.pageNum, textFrameLocation);
+		j.textSize = 9;
+		j.alignment = "left";
+		j.borderStyle = border.s;
+		j.strokeColor = color.black;
+		j.lineWidth = 1;
+		j.multiline = true;
+		var b = this.addField("Section1 Button1", "button", this.pageNum, button_Location);
+		b.borderStyle = border.s;
+		b.strokeColor = color.black;
+		b.lineWidth = 1;
+		b.buttonSetCaption("+");
+		b.setAction("MouseDown",test_button_press('Section1 Button1', 'Dropdown2', sect1_Dropdown2));
+
+	// If another item selected, don't change anything
+	} else if (d.value == "-Select Question-") {
+		this.removeField("Section1 TextField1");
+		this.removeField("Section1 Button1");
+	}
+}
+	
+var b = "Dropdown1";
+add_Data_Frame(sect1_TextField1_RECT, sect1_Button1, b, questions_Sec1_Box1, textBoxName_Sect1_Q1);
+
+//=============================================================================================
+
+
+	var questions_Sec1_Box1 = ['-Select Question-','Question 1', 'Question 2', 'Question 3', 'Question 4'];
+	var questions_Sec1_Box2 = ['-Select Question-','Question 1', 'Question 2'];
+	var questions_Sec1_Box3 = ['-Select Question-','Question 1', 'Question 2', 'Question 3', 'Question 4'];
+	var questions_Sec1_Box4 = ['-Select Question-','Question 1', 'Question 2', 'Question 3'];
+	var questions_Sec1_Box5 = ['-Select Question-','Question 1', 'Question 2'];
+
+	var sect1_TextField1_RECT = [38.36689758300781,651.142333984375,589.9944458007812,566.829833984375];
+	var sect1_TextField2_RECT = [38.36689758300781,532.6468505859375,589.9945068359375,448.3343811035156];
+	var sect1_TextField3_RECT = [38.36689758300781,417.1011047363281,589.9944458007812,332.7886657714844];
+	var sect1_TextField4_RECT = [38.36689758300781,296.96258544921875,589.9944458007812,212.6501007080078];
+	var sect1_TextField5_RECT = [38.36689758300781,178.912109375,589.9945068359375,94.59962463378906];
+
+	var sect1_Dropdown1 = [100.13999938964844,678.3800048828125,226.06100463867188,658.3800048828125];
+	var sect1_Dropdown2 = [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812];
+	var sect1_Dropdown3 = [99.40370178222656,443.5546569824219,225.32472229003906,423.5546569824219];
+	var sect1_Dropdown4 = [99.78884887695312,328.0089416503906,225.70986938476562,308.0089416503906];
+	var sect1_Dropdown5 = [99.34426879882812,207.87037658691406,225.26528930664062,187.87037658691406];
+
+	var sect1_Button1 = [42.80717468261719,563.302734375,57.20738220214844,543.302734375];
+	var sect1_Button2 = [42.80717468261719,329.2615661621094,57.20738220214844,309.2615661621094];
+	var sect1_Button3 = [42.80717468261719,444.8072814941406,57.20738220214844,424.8072814941406];
+	var sect1_Button4 = [42.80717468261719,209.1230010986328,57.20738220214844,189.1230010986328];
+	var sect1_Button5 = [42.80717468261719,91.07252502441406,57.20738220214844,71.07252502441406];
+
+
+// ---------------------------------------------------
+function button_Press(){
+	var b = this.getField("Section1 Button1");
+if (b && this.getField("Dropdown2")) {
+	this.removeField("Dropdown2");
+	b.buttonSetCaption("+");
+} else{
+	var k = this.addField("Dropdown2", "combobox", this.pageNum, [99.958984375,562.0501098632812,225.8800048828125,542.0501098632812]);
+	k.setItems(['-Select Question-','Question 1', 'Question 2']);
+	b.buttonSetCaption("-");
+}
+}
+
+// ---------------------------------------------------
+function create_Data_Frame(textFrameLocation, button_Location, currDD, DDQuestions){
+	var d = this.getField(currDD);
+	var textFrameLocation = textFrameLocation;
+	
+	var b_Arr1 = button_Location;
+	var textFieldSec1 = this.getField("Section1 TextField1");
+	var buttonFieldSec1 = this.getField("Section1 Button1");
+
+	// Create text box if Selected Question is not selected and a textfield doesn't exist
+	if (d.value != "-Select Question-"){
+		var j = this.addField("Section1 TextField1", "text", this.pageNum, textFrameLocation);
+		j.textSize = 9;
+		j.alignment = "left";
+		j.borderStyle = border.s;
+		j.strokeColor = color.black;
+		j.lineWidth = 1;
+		j.multiline = true;
+		var b = this.addField("Section1 Button1", "button", this.pageNum, b_Arr1);
+		b.borderStyle = border.s;
+		b.strokeColor = color.black;
+		b.lineWidth = 1;
+		b.buttonSetCaption("+");
+		b.setAction("MouseDown",button_Press);
+
+	// If another item selected, don't change anything
+	} else if (d.value == "-Select Question-") {
+		this.removeField("Section1 TextField1");
+		this.removeField("Section1 Button1");}}
+
+// ---------------------------------------------------
+
+create_Data_Frame(sect1_TextField1_RECT,sect1_Button1,"Dropdown1",questions_Sec1_Box1);
