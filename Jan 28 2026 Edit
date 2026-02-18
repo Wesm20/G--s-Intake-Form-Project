@@ -69,10 +69,6 @@ function createButtonQuotes(){
 }
 
 function createTextboxQuotes(){
-	var name = event.target.name;
-	var m = name.match(/Section(\d+)_Dropdown(\d+)/);
-	var sectNum = Number(m[1]);
-	var ddNum   = Number(m[2]);
 	var tD = getComboboxTotals();
 	var textFieldTotals = getTextFieldstotals();
 	var lowestLine = lowLine();
