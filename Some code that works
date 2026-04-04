@@ -1,0 +1,210 @@
+/* NEED TO ADD ------ text fields that dynamically restart numbering after new section ------------
+// No header for additional pages - client name, date, session # on first page only
+// Dynamically rename textfields based on section numbers -- Sect1 Text1, Text2, Sect2 Text1 etc. --
+// When pressing the section# button# when '-', it will keep 'add new section button' hidden
+// If deleting a new section, the section# button# stays on lower line, not the 'add new section button' level
+
+// [ left vertical line x-coord, top horizontal line y-coord, right vertical line x-coord, bottom horizonal line y-coord ]
+
+DD1 - Starting Dropdown = 99.16239929199219,678.3800048828125,225.08299255371094,658.3800048828125
+TextField first box	= 38.36689758300781,651.142333984375,589.9944458007812,566.829833984375
+Buttons level		= 43.78898620605469,563.302734375,58.18919372558594,543.302734375
+Add new section button  = 12.788986206054688,563.302734375,32.18919372558594,543.302734375
+
+Generate horizontal height PLUS gap between lowest field 
+
+exampleButton = [43.78898620605469, ((563.302734375 + (6.398 * #textFields)) * # buttons), 58.18919372558594, ((543.302734375 + (6.398 * #textFields)) * # buttons)
+*/
+
+function lowLine(){var lowestLine = 864;for (var i = 0; i < this.numFields; i++){var j = this.getField(this.getNthFieldName(i)); if ( j.rect[3] < lowestLine) {lowestLine = j.rect[3];}}return lowestLine;}
+
+var DD1 = [99.16239929199219,678.3800048828125,225.08299255371094,658.3800048828125];
+var textField1 = [39.02143859863281,643.9422607421875,590.6489868164062,559.6297607421875];
+var buttonAddDD = [43.78898620605469,554.1390991210938,58.18919372558594,534.1390991210938];
+var addNewSectButton = [12.788986206054688,554.1390991210938,32.18919372558594,534.1390991210938];
+var section1 = [69.849609375,698.2940063476562,141.8280029296875,676.2940063476562];
+var sectionTotals = currPageNum = sectionButtonTotals = 0;
+var currSect;
+
+var sect1_Qs = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\""]];
+
+var sect2_Qs = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""]]
+
+
+// Return number of combo box fields //
+function getComboboxTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "combobox"){tD++;}}return tD;}
+
+
+// Return number of button fields //
+function getButtonTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "button"){tD++;}}return tD;}
+
+
+// Return number of fields with name of "Section #" //
+function getSectionFieldstotals() {
+	var searchPattern = /^Section \d+$/;
+	var sectionTotals = 0;
+	for (var i = 0; i < this.numFields; i++) {
+		var fname = this.getNthFieldName(i);
+		if (searchPattern.test(fname)) {
+			sectionTotals++;
+		}
+	}
+	return sectionTotals;
+}
+
+
+// Return number of fields with name of "Section# Button#" //
+function getSectionButtonFieldstotals() {var searchPattern = /Section\d+\sButton\d+/;var sectionButtonTotals = 0;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionButtonTotals++;}}return sectionButtonTotals;}
+
+
+// Return number of fields with name of "Section# TextField#" //
+function getTextFieldstotals() {var searchPattern = /Section\d+\sTextField\d+/;var sectionButtonTotals = 0;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionButtonTotals++;}}return sectionButtonTotals;}
+
+
+function createButtonQuotes(){
+	var lowestLine = lowLine();
+	
+	var crtStr = 
+	"var b = this.getField(\"" + ('Section' + getSectionFieldstotals() + ' Button' + getComboboxTotals())+ "\");\n" + 
+	"if (b && this.getField(\"" + ('Dropdown' + (getComboboxTotals() + 1)) + "\")) {\n" +
+		"this.removeField(\"" + ('Dropdown' + (getComboboxTotals() + 1)) + "\"); \n" +
+		"b.buttonSetCaption('+');\n" +
+	"} else {\n" +
+		"var k = this.addField(\"" + ('Dropdown' + (getComboboxTotals() + 1)) + "\", \"combobox\", " + currPageNum + ", [" + DD1[0] + ", " + (lowestLine + 20.5) + ", " + DD1[2] + ", " + (lowestLine) + "]);\n" + 
+		"k.setItems([" + sect1_Qs[getComboboxTotals()] + "]);\n" + 
+		"k.setAction('Calculate',createTextboxQuotes());\n" + 
+		"b.buttonSetCaption('-');\n" + 
+	"}";
+	return crtStr;
+}
+
+// CODE ADDED TO DROPDOWN QUESTIONS
+function createTextboxQuotes(){
+	var sectTotals = getSectionFieldstotals();
+	var tD = getComboboxTotals();
+	var textFieldTotals = getTextFieldstotals();
+	var lowestLine = lowLine();
+	var sectQLength = "sect" + sectTotals + "_Qs.length";
+
+var crtStr = 
+	// Get section field totals
+	"var sectTotals = getSectionFieldstotals();\n" +
+
+	// Get textbox field totals
+	"var textFieldTotals = getTextFieldstotals();\n" +
+
+	// "console.println('Section totals: ' + sectTotals);\n" +
+	"var currDropdown = event.target.name.slice(-1);\n" +
+	
+	// Get Section Button field Totals
+	"var tB = getSectionButtonFieldstotals();\n" +
+	// "console.println('tB ' + tB);\n" +
+
+	"var currSect = sect" + sectTotals + "_Qs.length;\n" +
+	// "console.println(\"sect#_Qs: \" + " + currSect + ");\n" +
+	"var tD = getComboboxTotals();\n" +
+	"var lowestLine = lowLine();\n" +
+	// "console.println('tD: ' + tD);\n" +
+	// "console.println('Lowest Line: ' + lowestLine);\n" +
+
+	"var textFieldSec1 = this.getField('Section' + sectTotals + ' TextField' + currDropdown);\n" +
+	"var d = this.getField(event.target.name);\n" +
+	"if (tB < sect" + sectTotals + "_Qs.length){\n" +
+	// "console.println('Event target name: ' + event.target.name);\n" +
+	"if (d.value != '-Select Question-' && !textFieldSec1){\n" +
+		"if(this.getField('Add Next Section Button')){this.removeField('Add Next Section Button')}\n" +
+    		"var j = this.addField('Section" + sectTotals + " TextField" + tD + "', 'text', " + currPageNum + ", [" + textField1[0] + ", " + (lowestLine - 6.398 - ((sectTotals - 1) * 26)) + ", " + textField1[2] + ", " + (lowestLine - 84.31 - ((sectTotals - 1) * 26)) + "]);\n" +
+		"j.textSize = 9;j.alignment = 'left';j.borderStyle = border.s;j.strokeColor = color.black;j.lineWidth = 1;j.multiline = true;\n" +
+		"var m = this.addField('Add Next Section Button', 'button', " + currPageNum + ", [" + addNewSectButton[0] + ", " + (lowestLine - 89.81) + ", " + addNewSectButton[2] + ", " + (lowestLine - 110.31) + "]);\n" +
+		"m.borderStyle = border.s;m.strokeColor = color.black;m.lineWidth = 1;m.display = display.noPrint;m.buttonSetCaption('+');m.setAction(\"MouseDown\",createNewSectionButton());\n" +
+    		"var b = this.addField('Section" + sectTotals + " Button" + tD + "', 'button', " + this.pageNum + ", [" + buttonAddDD[0] + ", " + (lowestLine - 89.81) + ", " + buttonAddDD[2] + ", " + (lowestLine - 110.31) + "]);\n" +
+		"b.borderStyle = border.s;b.strokeColor = color.black;b.lineWidth = 1;b.display = display.noPrint;b.buttonSetCaption('+');b.setAction(\"MouseDown\",createButtonQuotes());\n" +
+	"} else {\n" +
+		"this.removeField('Section' + sectTotals + ' TextField' + tD);\n" +
+		"this.removeField('Section' + sectTotals + ' Button' + tD);\n" +
+		"this.removeField('Add Next Section Button');\n" +
+	"}}"
+return crtStr;
+}
+
+//console.println("Section totals: " + getSectionFieldstotals());
+
+function createNewSectionButton(){
+	var sect2_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""]];
+	var buttonTotals = getButtonTotals();
+	var dropdownTotals = getComboboxTotals();
+	var lowestLine = lowLine();
+	var fieldTotals = getSectionFieldstotals();
+	// console.println("\nButton totals: " + buttonTotals);
+	var newSectButtonTotal = getSectionButtonFieldstotals();
+		var h = 
+	"if(this.getField('Section1 Button5')){\n" +
+		"this.newPage(" + (currPageNum + 1)  + ");\n" +
+		"var p = this.addField(\"Section " + (fieldTotals +  1) + "\", \"text\", " + (currPageNum + 1) + ", [" + section1[0] + ", " + (lowestLine + 22) + ", " + section1[2] + ", " + (lowestLine) + "]);\n" +
+		"p.value = 'Section " + (fieldTotals + 1) + "';\n" +
+		"var d = this.getField('Add Next Section Button');\n" +
+		"d.buttonSetCaption('-');\n" +
+		"var h = this.addField('Dropdown" + (getComboboxTotals() + 1) + "', 'combobox', " + currPageNum + ", [" + DD1[0] + ", " + (lowestLine + 20.5) + ", " + DD1[2] + ", " + (lowestLine) + "])\n" +
+		//"var currSect = sect" + fieldTotals + "_Qs";
+		"h.setItems([" + sect2_Qs_Formatted[0] + "]);\n" +
+		"h.setAction('Calculate',  createTextboxQuotes())\n" +
+		"console.println('Running if section1 button5 exists');\n" +
+	"} else if (\!this.getField('Section " + (fieldTotals +  1) + "')){\n" +
+		"this.removeField('Section" + fieldTotals + " Button" + getButtonTotals() + "');\n" +
+		"var o = this.addField(\"Section " + (fieldTotals +  1) + "\", \"text\", " + currPageNum + ", [" + section1[0] + ", " + (lowestLine + 22) + ", " + section1[2] + ", " + (lowestLine) + "]);\n" +
+		"o.value = 'Section " + (fieldTotals +  1) + "';\n" +
+		"var d = this.getField('Add Next Section Button');\n" +
+		"d.buttonSetCaption('-');\n" +
+		"if(" + currPageNum + " > 0) {\n" + 
+			"this.deletePages({nStart: " + currPageNum + ", nEnd: " + currPageNum + "})\n" +
+		"}\n" +
+		"var h = this.addField('Dropdown" + (getComboboxTotals() + 1) + "', 'combobox', " + currPageNum + ", [" + DD1[0] + ", " + (lowestLine - 7.238) + ", " + DD1[2] + ", " + (lowestLine - 7.238 - 20.5) + "])\n" +
+		//"var currSect = sect" + fieldTotals + "_Qs";
+		"h.setItems([" + sect2_Qs_Formatted[0] + "]);\n" +
+		"h.setAction('Calculate',  createTextboxQuotes())\n" +
+		"console.println('Running if another button exists');\n" +
+	"} else if (this.getField('Section " + (fieldTotals + 1) + "')) {\n" +
+		"this.removeField('Section " + (fieldTotals + 1) + "');\n" +
+		//"this.addField('Section" + fieldTotals + " Button" + newSectButtonTotal + "', 'button', this.pageNum + ", [" + buttonAddDD[0] + ", " + (lowestLine - 7.238) + ", " + buttonAddDD[2] + ", " + (lowestLine - 7.238 - 20.5) + "])\n" +
+		//"this.removeField('Section" + fieldTotals + " Button" + newSectButtonTotal + "');\n" +
+		"this.removeField('Dropdown" + (getComboboxTotals() + 1) + "');\n" +
+		"console.println('Running if section field exists');\n" +
+		"var d = this.getField('Add Next Section Button');\n" +
+		"d.buttonSetCaption('+');\n" +
+		"var p = this.addField('Section" + fieldTotals + " Button" + (newSectButtonTotal + 1) + "', 'button', " + currPageNum + ", [" + buttonAddDD[0] + ", " + (lowestLine - 7.238) + ", " + buttonAddDD[2] + ", " + (lowestLine - 7.238 - 20.5) + "]);\n" +
+		"p.borderStyle = border.s;\n" +
+		"p.strokeColor = color.black;\n" +
+		"p.lineWidth = 1;\n" +
+		"p.display = display.noPrint;\n" +
+		"p.buttonSetCaption('+');\n" +
+		"p.setAction(\"MouseDown\",createButtonQuotes());\n" +
+	"}"
+	return h;
+}
+
+// RUNS EVERY TIME DROPDOWN IS CHANGED
+function createTextbox (){
+	var tD = getComboboxTotals();
+	console.println("tD createFirstTextBox: " + tD);
+	var currDropdown = event.target.name.slice(-1);
+	var currSections = getSectionFieldstotals();
+	var textFieldSec1 = this.getField("Section" + currSections + " TextField" + currDropdown);
+	var buttonFieldSec1 = this.getField("Section" + currSections + " Button" + currDropdown);
+ 
+	var d = this.getField(event.target.name);
+	if (d.value != "-Select Question-" && !textFieldSec1){
+		if(this.getField("Add Next Section Button")){this.removeField("Add Next Section Button")}
+    		var j = this.addField(("Section" + currSections + " TextField" + tD), "text", currPageNum, textField1);
+		j.textSize = 9;j.alignment = "left";j.borderStyle = border.s;j.strokeColor = color.black;j.lineWidth = 1;j.multiline = true; 
+		var m = this.addField('Add Next Section Button', 'button', currPageNum, addNewSectButton);
+		m.borderStyle = border.s;m.strokeColor = color.black;m.lineWidth = 1;m.display = display.noPrint;m.buttonSetCaption("+");m.setAction("MouseDown", createNewSectionButton());
+    		var b = this.addField(("Section" + currSections + " Button" + tD), 'button', currPageNum, buttonAddDD);
+		b.borderStyle = border.s;b.strokeColor = color.black;b.lineWidth = 1;b.display = display.noPrint;b.buttonSetCaption("+");b.setAction("MouseDown",createButtonQuotes());
+	} else if (d.value == "-Select Question-" && textFieldSec1) {
+		this.removeField("Section1 TextField" + tD);
+		this.removeField("Section1 Button" + tD);
+		this.removeField("Add Next Section Button");
+	}
+}
+
+createTextbox();
