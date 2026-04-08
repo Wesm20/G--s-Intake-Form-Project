@@ -16,8 +16,6 @@ Generate horizontal height PLUS gap between lowest field
 exampleButton = [43.78898620605469, ((563.302734375 + (6.398 * #textFields)) * # buttons), 58.18919372558594, ((543.302734375 + (6.398 * #textFields)) * # buttons)
 */
 
-function lowLine(){var lowestLine = 864;for (var i = 0; i < this.numFields; i++){var j = this.getField(this.getNthFieldName(i)); if ( j.rect[3] < lowestLine) {lowestLine = j.rect[3];}}return lowestLine;}
-
 var DD1 = [99.16239929199219,678.3800048828125,225.08299255371094,658.3800048828125];
 var textField1 = [39.02143859863281,643.9422607421875,590.6489868164062,559.6297607421875];
 var buttonAddDD = [43.78898620605469,554.1390991210938,58.18919372558594,534.1390991210938];
@@ -30,6 +28,9 @@ var sect1_Qs = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"
 
 var sect2_Qs = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""]]
 
+// Return current lowest line (horizontally from bottom)
+function lowLine(){var lowestLine = 864;for (var i = 0; i < this.numFields; i++){var j = this.getField(this.getNthFieldName(i)); if ( j.rect[3] < lowestLine) {lowestLine = j.rect[3];}}return lowestLine;}
+
 
 // Return number of combo box fields //
 function getComboboxTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {if(this.getField(this.getNthFieldName(i)).type == "combobox"){tD++;}}return tD;}
@@ -40,17 +41,7 @@ function getButtonTotals(){var tD = 0;for( var i = 0; i < this.numFields; i++) {
 
 
 // Return number of fields with name of "Section #" //
-function getSectionFieldstotals() {
-	var searchPattern = /^Section \d+$/;
-	var sectionTotals = 0;
-	for (var i = 0; i < this.numFields; i++) {
-		var fname = this.getNthFieldName(i);
-		if (searchPattern.test(fname)) {
-			sectionTotals++;
-		}
-	}
-	return sectionTotals;
-}
+function getSectionFieldstotals() {var searchPattern = /^Section \d+$/;var sectionTotals = 0;for (var i = 0; i < this.numFields; i++) {var fname = this.getNthFieldName(i);if (searchPattern.test(fname)) {sectionTotals++;}}return sectionTotals;}
 
 
 // Return number of fields with name of "Section# Button#" //
@@ -111,7 +102,7 @@ var crtStr =
 	"var d = this.getField(event.target.name);\n" +
 	"if (tB < sect" + sectTotals + "_Qs.length){\n" +
 	// "console.println('Event target name: ' + event.target.name);\n" +
-	"if (d.value != '-Select Question-' && !textFieldSec1){\n" +
+	"if (d.value \!= '-Select Question-' && \!textFieldSec1){\n" +
 		"if(this.getField('Add Next Section Button')){this.removeField('Add Next Section Button')}\n" +
     		"var j = this.addField('Section" + sectTotals + " TextField" + tD + "', 'text', " + currPageNum + ", [" + textField1[0] + ", " + (lowestLine - 6.398 - ((sectTotals - 1) * 26)) + ", " + textField1[2] + ", " + (lowestLine - 84.31 - ((sectTotals - 1) * 26)) + "]);\n" +
 		"j.textSize = 9;j.alignment = 'left';j.borderStyle = border.s;j.strokeColor = color.black;j.lineWidth = 1;j.multiline = true;\n" +
@@ -129,60 +120,25 @@ return crtStr;
 
 //console.println("Section totals: " + getSectionFieldstotals());
 
+// RUNS WHEN NEW SECTION BUTTON IS PRESSED
 function createNewSectionButton(){
-	var sect2_Qs_Formatted = [["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\""], ["\"-Select Question-\"","\"Question 1\""], ["\"-Select Question-\"","\"Question 1\"", "\"Question 2\"", "\"Question 3\"", "\"Question 4\""]];
 	var buttonTotals = getButtonTotals();
 	var dropdownTotals = getComboboxTotals();
 	var lowestLine = lowLine();
 	var fieldTotals = getSectionFieldstotals();
-	// console.println("\nButton totals: " + buttonTotals);
 	var newSectButtonTotal = getSectionButtonFieldstotals();
-		var h = 
-	"if(this.getField('Section1 Button5')){\n" +
-		"this.newPage(" + (currPageNum + 1)  + ");\n" +
-		"var p = this.addField(\"Section " + (fieldTotals +  1) + "\", \"text\", " + (currPageNum + 1) + ", [" + section1[0] + ", " + (lowestLine + 22) + ", " + section1[2] + ", " + (lowestLine) + "]);\n" +
-		"p.value = 'Section " + (fieldTotals + 1) + "';\n" +
-		"var d = this.getField('Add Next Section Button');\n" +
-		"d.buttonSetCaption('-');\n" +
-		"var h = this.addField('Dropdown" + (getComboboxTotals() + 1) + "', 'combobox', " + currPageNum + ", [" + DD1[0] + ", " + (lowestLine + 20.5) + ", " + DD1[2] + ", " + (lowestLine) + "])\n" +
-		//"var currSect = sect" + fieldTotals + "_Qs";
-		"h.setItems([" + sect2_Qs_Formatted[0] + "]);\n" +
-		"h.setAction('Calculate',  createTextboxQuotes())\n" +
-		"console.println('Running if section1 button5 exists');\n" +
-	"} else if (\!this.getField('Section " + (fieldTotals +  1) + "')){\n" +
-		"this.removeField('Section" + fieldTotals + " Button" + getButtonTotals() + "');\n" +
-		"var o = this.addField(\"Section " + (fieldTotals +  1) + "\", \"text\", " + currPageNum + ", [" + section1[0] + ", " + (lowestLine + 22) + ", " + section1[2] + ", " + (lowestLine) + "]);\n" +
-		"o.value = 'Section " + (fieldTotals +  1) + "';\n" +
-		"var d = this.getField('Add Next Section Button');\n" +
-		"d.buttonSetCaption('-');\n" +
-		"if(" + currPageNum + " > 0) {\n" + 
-			"this.deletePages({nStart: " + currPageNum + ", nEnd: " + currPageNum + "})\n" +
-		"}\n" +
-		"var h = this.addField('Dropdown" + (getComboboxTotals() + 1) + "', 'combobox', " + currPageNum + ", [" + DD1[0] + ", " + (lowestLine - 7.238) + ", " + DD1[2] + ", " + (lowestLine - 7.238 - 20.5) + "])\n" +
-		//"var currSect = sect" + fieldTotals + "_Qs";
-		"h.setItems([" + sect2_Qs_Formatted[0] + "]);\n" +
-		"h.setAction('Calculate',  createTextboxQuotes())\n" +
-		"console.println('Running if another button exists');\n" +
-	"} else if (this.getField('Section " + (fieldTotals + 1) + "')) {\n" +
-		"this.removeField('Section " + (fieldTotals + 1) + "');\n" +
-		//"this.addField('Section" + fieldTotals + " Button" + newSectButtonTotal + "', 'button', this.pageNum + ", [" + buttonAddDD[0] + ", " + (lowestLine - 7.238) + ", " + buttonAddDD[2] + ", " + (lowestLine - 7.238 - 20.5) + "])\n" +
-		//"this.removeField('Section" + fieldTotals + " Button" + newSectButtonTotal + "');\n" +
-		"this.removeField('Dropdown" + (getComboboxTotals() + 1) + "');\n" +
-		"console.println('Running if section field exists');\n" +
-		"var d = this.getField('Add Next Section Button');\n" +
-		"d.buttonSetCaption('+');\n" +
-		"var p = this.addField('Section" + fieldTotals + " Button" + (newSectButtonTotal + 1) + "', 'button', " + currPageNum + ", [" + buttonAddDD[0] + ", " + (lowestLine - 7.238) + ", " + buttonAddDD[2] + ", " + (lowestLine - 7.238 - 20.5) + "]);\n" +
-		"p.borderStyle = border.s;\n" +
-		"p.strokeColor = color.black;\n" +
-		"p.lineWidth = 1;\n" +
-		"p.display = display.noPrint;\n" +
-		"p.buttonSetCaption('+');\n" +
-		"p.setAction(\"MouseDown\",createButtonQuotes());\n" +
-	"}"
+
+	var h = 
+		"console.println('Lowest line: ' + " + lowestLine + ");\n" +
+		"if(" + lowestLine + " < 100){\n" +
+			"app.trustedFunction(this.newPage());\n" +
+			"var h = this.addField('Dropdown" + (getComboboxTotals() + 1) + "', 'combobox', " + currPageNum + ", [" + DD1[0] + ", " + DD1[1] + ", " + DD1[2] + ", " + DD1[3] + "])\n" +
+		"} else {\n" + 
+			"var h = this.addField('Dropdown" + (getComboboxTotals() + 1) + "', 'combobox', " + currPageNum + ", [" + DD1[0] + ", " + (lowestLine + 20.5) + ", " + DD1[2] + ", " + (lowestLine) + "])\n" +
+		"}";
 	return h;
 }
 
-// RUNS EVERY TIME DROPDOWN IS CHANGED
 function createTextbox (){
 	var tD = getComboboxTotals();
 	console.println("tD createFirstTextBox: " + tD);
