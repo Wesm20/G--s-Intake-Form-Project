@@ -196,6 +196,7 @@ totalSections = GetSectionTotal         ' Sections
 ' ---------------------------------------------------
 
 'Set shpButn1 = ActiveSheet.Shapes("AddNewSectButn1")
+On Error Resume Next
 Set origNextSectBtn = ActiveSheet.Shapes("AddNewSectButn1")
 Set origNewQButn = ActiveSheet.Shapes("NextQButn1")
 Set origTextbox = ActiveSheet.Shapes("Sect1 Q1")
@@ -254,15 +255,6 @@ Selection.Merge True
 
 Range("C" & DDlistRow & ":L" & DDlistRow).Value = Sheets("Sheet2").Range("E2").Value
 
-' ============= DELETE BUTTONS =============
-' origNextSectBtn.Delete
-ActiveSheet.Shapes.Range(Array(origNewQButn.Name)).Select
-With Selection
-    .Characters.Text = "-"
-    ' .OnAction = ""
-End With
-' ==========================================
-
 Set newBtn = ws.Buttons.Add(origNextSectBtn.Left, (newAddNextSectButn + 30), origNextSectBtn.Width, origNextSectBtn.Height)
 Set newBtn2 = ws.Buttons.Add(origNewQButn.Left, (newAddNextSectButn + 30), origNewQButn.Width, origNewQButn.Height)
 
@@ -287,6 +279,16 @@ With newTextbox ' Textbox info
     .Name = "Sect" & (totalSections + 1) & " Q" & rangeQ
 End With
 
+' ============= DELETE BUTTONS =============
+origNextSectBtn.Delete
+ActiveSheet.Shapes.Range(Array(origNewQButn.Name)).Select
+With Selection
+    .Characters.Text = "-"
+    ' .OnAction = ""
+End With
+' ==========================================
+
+' ====== Custom created function ======
 ' clear ("C" & DDlistRow)
 
 End Sub
@@ -328,13 +330,26 @@ Debug.Print "Height: " & shp.Height
 End Sub
 Sub getshapenames()
 
-Dim sh As ShapeSub NextQButton()
+Dim sh As Shape
+Dim x As Double
+x = 1
+Sheets("Main Sheet").Select
+
+For Each sh In ActiveSheet.Shapes
+'Debug.Print sh.Name
+'Sheets("Main Sheet").Range("A" + Trim(Str(x))).Value = sh.Name
+'x = x + 1
+Next
+
+End Sub
+Sub NextQButton()
 
 Dim origNextSectBtn, origNewQButn, origTextbox, newTextbox As Shape
 Dim DDlistRow, totalDDLists, totalDDLists2, newTextboxTop, rangeQ As Integer
 Dim newBtn, newBtn2 As Button
 Dim ws As Worksheet
 
+On Error Resume Next
 Set origNextSectBtn = ActiveSheet.Shapes("AddNewSectButn1")
 Set origNewQButn = ActiveSheet.Shapes("NextQButn1")
 Set origTextbox = ActiveSheet.Shapes("Sect1 Q1")
@@ -438,17 +453,5 @@ End Sub
 Sub DeletePrevious()
 
 
-
-End Sub
-
-Dim x As Double
-x = 1
-Sheets("Main Sheet").Select
-
-For Each sh In ActiveSheet.Shapes
-'Debug.Print sh.Name
-'Sheets("Main Sheet").Range("A" + Trim(Str(x))).Value = sh.Name
-'x = x + 1
-Next
 
 End Sub
