@@ -1,3 +1,40 @@
+Sub ListShapesAndValidation()
+    Dim shp As Shape
+    Dim cell As Range
+    Dim validationRange As Range
+    Dim ws As Worksheet
+    Set ws = ActiveSheet
+
+    ' 1. Get all Shapes on the sheet
+    Debug.Print "--- SHAPES ---"
+    If ws.Shapes.Count > 0 Then
+        For Each shp In ws.Shapes
+            ' Prints Shape Name and its Top-Left cell address
+            Debug.Print "Shape: " & shp.Name & " | Location: " & shp.TopLeftCell.Address _
+            & " | Top: " & shp.Top & " | Left: " & shp.Left & " | Width: " & shp.Width _
+            & " | Height: " & shp.Height
+        Next shp
+    Else
+        Debug.Print "No shapes found."
+    End If
+
+    ' 2. Get all Data Validation on the sheet
+    ' Debug.Print "--- DATA VALIDATION ---"
+    On Error Resume Next ' Handle error if no validation exists
+    Set validationRange = ws.UsedRange.SpecialCells(xlCellTypeAllValidation)
+    On Error GoTo 0
+
+'    If Not validationRange Is Nothing Then
+'        For Each cell In validationRange
+'            ' Prints Cell Address and the Validation Type
+'            Debug.Print "Cell: " & cell.Address & " | Type: " & cell.Validation.Type
+'        Next cell
+'    Else
+'        Debug.Print "No data validation found."
+'    End If
+End Sub
+
+
 
 Function FindListValidationCells() As Integer
 ' Get all drop down lists
@@ -217,7 +254,14 @@ Selection.Merge True
 
 Range("C" & DDlistRow & ":L" & DDlistRow).Value = Sheets("Sheet2").Range("E2").Value
 
+' ============= DELETE BUTTONS =============
 ' origNextSectBtn.Delete
+ActiveSheet.Shapes.Range(Array(origNewQButn.Name)).Select
+With Selection
+    .Characters.Text = "-"
+    ' .OnAction = ""
+End With
+' ==========================================
 
 Set newBtn = ws.Buttons.Add(origNextSectBtn.Left, (newAddNextSectButn + 30), origNextSectBtn.Width, origNextSectBtn.Height)
 Set newBtn2 = ws.Buttons.Add(origNewQButn.Left, (newAddNextSectButn + 30), origNewQButn.Width, origNewQButn.Height)
@@ -246,7 +290,6 @@ End With
 ' clear ("C" & DDlistRow)
 
 End Sub
-
 Sub clear(ByVal rng As String)
 ' Gets argument's values of dropdown list and deletes list
 ' Planned use: to remove dropdown once the next question button is pressed
@@ -285,21 +328,7 @@ Debug.Print "Height: " & shp.Height
 End Sub
 Sub getshapenames()
 
-Dim sh As Shape
-Dim x As Double
-x = 1
-Sheets("Main Sheet").Select
-
-For Each sh In ActiveSheet.Shapes
-'Debug.Print sh.Name
-'Sheets("Main Sheet").Range("A" + Trim(Str(x))).Value = sh.Name
-'x = x + 1
-Next
-
-End Sub
-
-
-Sub NextQButton()
+Dim sh As ShapeSub NextQButton()
 
 Dim origNextSectBtn, origNewQButn, origTextbox, newTextbox As Shape
 Dim DDlistRow, totalDDLists, totalDDLists2, newTextboxTop, rangeQ As Integer
@@ -392,7 +421,7 @@ With newBtn2 ' Next Question Button
     .Name = "NextQButn" & (totalDDLists + 1)
 End With
 
-'Debug.Print origTextbox.Name & ": " & origTextbox.Top
+Debug.Print origTextbox.Name & ": " & origTextbox.Top
 newTextboxTop = origTextbox.Top + 90.108
 Set newTextbox = ws.Shapes.AddTextbox(msoTextOrientationHorizontal, 40.49992, newTextboxTop, 431.25, 73.12504)
 
@@ -403,5 +432,23 @@ With newTextbox ' Textbox info
 End With
 
 Range("C" & DDlistRow & ":L" & DDlistRow).Select
+
+End Sub
+
+Sub DeletePrevious()
+
+
+
+End Sub
+
+Dim x As Double
+x = 1
+Sheets("Main Sheet").Select
+
+For Each sh In ActiveSheet.Shapes
+'Debug.Print sh.Name
+'Sheets("Main Sheet").Range("A" + Trim(Str(x))).Value = sh.Name
+'x = x + 1
+Next
 
 End Sub
