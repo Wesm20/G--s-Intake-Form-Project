@@ -176,10 +176,8 @@ Else
     Set origTextbox = ActiveSheet.Shapes("Sect" & totalSections & " Q" & QNumbers("C" & tempRow & ":C200"))
 End If
 
-ws2.Select
-tempVal = Range("C2").Value
-newVal = tempVal + 1
-Range("C2").Value = newVal
+' ws2.Select
+ws2.Range("C2").Value = (totalSections + 1)
 
 ws.Select
 
@@ -320,18 +318,38 @@ totalDDLists = FindListValidationCells                  ' Questions
 totalSections = Worksheets("Sheet2").Range("C2").Value  ' Sections
 ' -------------------------------------------------------------------
 
-If totalDDLists > 1 And totalSections < 2 Then
-    Set origNextSectBtn = ActiveSheet.Shapes("AddNewSectButn" & totalDDLists)
-    Set origNewQButn = ActiveSheet.Shapes("NextQButn" & totalDDLists)
-    Set origTextbox = ActiveSheet.Shapes("Sect" & totalSections & " Q" & totalDDLists)
-Else
-    Set origNextSectBtn = ActiveSheet.Shapes("AddNewSectButn" & totalDDLists)
-    Set origNewQButn = ActiveSheet.Shapes("NextQButn" & totalDDLists)
+Select Case True
+    Case totalDDLists = 1 And totalSections = 2
+        Set origNextSectBtn = ActiveSheet.Shapes("AddNewSectButn" & totalDDLists)
+        Set origNewQButn = ActiveSheet.Shapes("NextQButn" & totalDDLists)
+        Set origTextbox = ActiveSheet.Shapes("Sect2 Q1")
+    Case totalDDLists = 2 And totalSections = 1
+        Set origNextSectBtn = ActiveSheet.Shapes("AddNewSectButn" & totalDDLists)
+        Set origNewQButn = ActiveSheet.Shapes("NextQButn" & totalDDLists)
+        Set origTextbox = ActiveSheet.Shapes("Sect1 Q2")
+    Case Else
+        Set origNextSectBtn = ActiveSheet.Shapes("AddNewSectButn" & totalDDLists)
+        Set origNewQButn = ActiveSheet.Shapes("NextQButn" & totalDDLists)
     
-    Set tempShape = ActiveSheet.Shapes("NextQButn" & totalDDLists)
-    tempRow = tempShape.TopLeftCell.Row
-    Set origTextbox = ActiveSheet.Shapes("Sect" & totalSections & " Q" & QNumbers("C" & tempRow & ":C200"))
-End If
+        Set tempShape = ActiveSheet.Shapes("NextQButn" & totalDDLists)
+        tempRow = tempShape.TopLeftCell.Row
+        Set origTextbox = ActiveSheet.Shapes("Sect" & totalSections & " Q" & QNumbers("C" & tempRow & ":C200"))
+End Select
+
+'Debug.Print "Formula thing: " & QNumbers("C" & tempRow & ":C200")
+
+'If totalDDLists > 1 And totalSections < 1 Then
+'    Set origNextSectBtn = ActiveSheet.Shapes("AddNewSectButn" & totalDDLists)
+'    Set origNewQButn = ActiveSheet.Shapes("NextQButn" & totalDDLists)
+'    Set origTextbox = ActiveSheet.Shapes("Sect" & totalSections & " Q" & totalDDLists)
+'Else
+'    Set origNextSectBtn = ActiveSheet.Shapes("AddNewSectButn" & totalDDLists)
+'    Set origNewQButn = ActiveSheet.Shapes("NextQButn" & totalDDLists)
+'
+'    Set tempShape = ActiveSheet.Shapes("NextQButn" & totalDDLists)
+'    tempRow = tempShape.TopLeftCell.Row
+'    Set origTextbox = ActiveSheet.Shapes("Sect" & totalSections & " Q" & QNumbers("C" & tempRow & ":C200"))
+'End If
 
 DDlistRow = origNextSectBtn.TopLeftCell.Row
 
@@ -357,8 +375,6 @@ Range("C" & DDlistRow & ":L" & DDlistRow).Value = Sheets("Sheet2").Range("E2").V
 newAddNextSectButn = origNextSectBtn.Top + 90.108
 newAddNextQButn = origNewQButn.Top + 90.108
 
-' origNextSectBtn.Delete
-
 Set newBtn = ws.Buttons.Add(origNextSectBtn.Left, newAddNextSectButn, origNextSectBtn.Width, origNextSectBtn.Height)
 Set newBtn2 = ws.Buttons.Add(origNewQButn.Left, newAddNextSectButn, origNewQButn.Width, origNewQButn.Height)
 
@@ -376,8 +392,8 @@ With newBtn2 ' Next Question Button
     .Name = "NextQButn" & (totalDDLists + 1)
 End With
 
+'Debug.Print origTextbox.Name & ": " & origTextbox.Top
 newTextboxTop = origTextbox.Top + 90.108
-
 Set newTextbox = ws.Shapes.AddTextbox(msoTextOrientationHorizontal, 40.49992, newTextboxTop, 431.25, 73.12504)
 
 totalDDLists2 = FindListValidationCells
