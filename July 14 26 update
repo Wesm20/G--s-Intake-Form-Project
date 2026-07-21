@@ -411,7 +411,6 @@ Next i
 
 End Sub
 
-
 Function FindHorizontalPageBreaks()
     Dim pb As HPageBreak
     Dim ws As Worksheet
