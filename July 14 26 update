@@ -126,7 +126,7 @@ Else
     'End If
     
     Set rng2 = Worksheets("Main Sheet").Range(rng)
-    If
+    
     Set vRng = rng2.SpecialCells(xlCellTypeAllValidation)
     
     tC = 0
