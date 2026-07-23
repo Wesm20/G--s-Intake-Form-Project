@@ -246,6 +246,61 @@ Else
 End If
 
 End Function
+
+Sub SaveFileAs()
+' Save file as the following format: Client Name (Client ID) MM.DD.YY Session #.pdf
+
+Dim sessionDate, clientName, clientID, sessionNum As String
+
+clientName = Range("C3").value
+clientID = Range("G3").value
+sessionDate = Replace(Range("L3").value, "/", "-")
+sessionNum = Range("P3").value
+
+'    Application.ActivePrinter = "Microsoft Print to PDF on Ne00:"
+'    ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, Filename:= _
+'        Environ$("USERPROFILE") & "\OneDrive\Desktop\Client Sessions 2026\" & _
+'            "Wesley 1BDI 7-22-2026 1.pdf", Quality:= _
+'        xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
+'        OpenAfterPublish:=True
+        
+If clientName = "" Or clientID = "" Or sessionDate = "" Or sessionNum = "" Then
+    MsgBox "Please enter Client Name, Client ID, Date or Session number and try again"
+Else
+    Application.ActivePrinter = "Microsoft Print to PDF on Ne00:"
+    ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, _
+        Filename:=Environ$("USERPROFILE") & "\OneDrive\Desktop\Client Sessions 2026\" & _
+            clientName & " ID NUM - " & clientID & " " & sessionDate & " Session - " & sessionNum & ".pdf"
+End If
+
+filePath = "C:\Users\wesle\OneDrive\Desktop\G's Nutrition Sheet BASE 2 Macro Enabled.xlsm"
+
+End Sub
+Sub ResetDoc()
+
+Dim clientName, clientID, sessionNum As String
+Dim sessionDate As Date
+
+varMsg = MsgBox("Would you like to reset all the sections?")
+
+If varMsg = 1 Then
+    MsgBox "Deleted sections"
+Else
+    MsgBox "Did NOT delete sections"
+End If
+
+Range("C3").value = ""
+Range("G3").value = ""
+Range("L3").value = ""
+Range("P3").value = ""
+
+Range("C5").value = Worksheets("Sheet2").Range("I2").value
+Range("C5:G5").Select.Merge Across = True
+Range("D6:O6").Select
+Selection.Merge True
+Range("D6:O6").value = Sheets("Sheet2").Range("E2").value
+
+End Sub
 Sub NextSectButton()
 ' Creates Textbox, AddNextSectButn and NextQButn
 
