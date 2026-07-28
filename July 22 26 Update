@@ -249,6 +249,7 @@ End Function
 
 Sub SaveFileAs()
 ' Save file as the following format: Client Name (Client ID) MM.DD.YY Session #.pdf
+' CreateObject("WScript.Shell").SpecialFolders("Desktop") & "\"
 
 Dim sessionDate, clientName, clientID, sessionNum As String
 
